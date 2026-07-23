@@ -16,8 +16,10 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 import { Route as LayoutAdminRouteImport } from './routes/_layout/admin'
+import { Route as LayoutDailyLogRouteImport } from './routes/_layout/daily-log'
+import { Route as LayoutFoodsRouteImport } from './routes/_layout/foods'
 import { Route as LayoutItemsRouteImport } from './routes/_layout/items'
-import { Route as LayoutMealsRouteImport } from './routes/_layout/meals'
+import { Route as LayoutRecipesRouteImport } from './routes/_layout/recipes'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
 
 const LayoutRoute = LayoutRouteImport.update({
@@ -54,14 +56,24 @@ const LayoutAdminRoute = LayoutAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutDailyLogRoute = LayoutDailyLogRouteImport.update({
+  id: '/daily-log',
+  path: '/daily-log',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutFoodsRoute = LayoutFoodsRouteImport.update({
+  id: '/foods',
+  path: '/foods',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const LayoutItemsRoute = LayoutItemsRouteImport.update({
   id: '/items',
   path: '/items',
   getParentRoute: () => LayoutRoute,
 } as any)
-const LayoutMealsRoute = LayoutMealsRouteImport.update({
-  id: '/meals',
-  path: '/meals',
+const LayoutRecipesRoute = LayoutRecipesRouteImport.update({
+  id: '/recipes',
+  path: '/recipes',
   getParentRoute: () => LayoutRoute,
 } as any)
 const LayoutSettingsRoute = LayoutSettingsRouteImport.update({
@@ -77,8 +89,10 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/admin': typeof LayoutAdminRoute
+  '/daily-log': typeof LayoutDailyLogRoute
+  '/foods': typeof LayoutFoodsRoute
   '/items': typeof LayoutItemsRoute
-  '/meals': typeof LayoutMealsRoute
+  '/recipes': typeof LayoutRecipesRoute
   '/settings': typeof LayoutSettingsRoute
 }
 export interface FileRoutesByTo {
@@ -87,8 +101,10 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/admin': typeof LayoutAdminRoute
+  '/daily-log': typeof LayoutDailyLogRoute
+  '/foods': typeof LayoutFoodsRoute
   '/items': typeof LayoutItemsRoute
-  '/meals': typeof LayoutMealsRoute
+  '/recipes': typeof LayoutRecipesRoute
   '/settings': typeof LayoutSettingsRoute
   '/': typeof LayoutIndexRoute
 }
@@ -100,8 +116,10 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/_layout/admin': typeof LayoutAdminRoute
+  '/_layout/daily-log': typeof LayoutDailyLogRoute
+  '/_layout/foods': typeof LayoutFoodsRoute
   '/_layout/items': typeof LayoutItemsRoute
-  '/_layout/meals': typeof LayoutMealsRoute
+  '/_layout/recipes': typeof LayoutRecipesRoute
   '/_layout/settings': typeof LayoutSettingsRoute
   '/_layout/': typeof LayoutIndexRoute
 }
@@ -114,8 +132,10 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/admin'
+    | '/daily-log'
+    | '/foods'
     | '/items'
-    | '/meals'
+    | '/recipes'
     | '/settings'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -124,8 +144,10 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/admin'
+    | '/daily-log'
+    | '/foods'
     | '/items'
-    | '/meals'
+    | '/recipes'
     | '/settings'
     | '/'
   id:
@@ -136,8 +158,10 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/_layout/admin'
+    | '/_layout/daily-log'
+    | '/_layout/foods'
     | '/_layout/items'
-    | '/_layout/meals'
+    | '/_layout/recipes'
     | '/_layout/settings'
     | '/_layout/'
   fileRoutesById: FileRoutesById
@@ -201,6 +225,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAdminRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/daily-log': {
+      id: '/_layout/daily-log'
+      path: '/daily-log'
+      fullPath: '/daily-log'
+      preLoaderRoute: typeof LayoutDailyLogRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/foods': {
+      id: '/_layout/foods'
+      path: '/foods'
+      fullPath: '/foods'
+      preLoaderRoute: typeof LayoutFoodsRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/_layout/items': {
       id: '/_layout/items'
       path: '/items'
@@ -208,11 +246,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutItemsRouteImport
       parentRoute: typeof LayoutRoute
     }
-    '/_layout/meals': {
-      id: '/_layout/meals'
-      path: '/meals'
-      fullPath: '/meals'
-      preLoaderRoute: typeof LayoutMealsRouteImport
+    '/_layout/recipes': {
+      id: '/_layout/recipes'
+      path: '/recipes'
+      fullPath: '/recipes'
+      preLoaderRoute: typeof LayoutRecipesRouteImport
       parentRoute: typeof LayoutRoute
     }
     '/_layout/settings': {
@@ -227,16 +265,20 @@ declare module '@tanstack/react-router' {
 
 interface LayoutRouteChildren {
   LayoutAdminRoute: typeof LayoutAdminRoute
+  LayoutDailyLogRoute: typeof LayoutDailyLogRoute
+  LayoutFoodsRoute: typeof LayoutFoodsRoute
   LayoutItemsRoute: typeof LayoutItemsRoute
-  LayoutMealsRoute: typeof LayoutMealsRoute
+  LayoutRecipesRoute: typeof LayoutRecipesRoute
   LayoutSettingsRoute: typeof LayoutSettingsRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutAdminRoute: LayoutAdminRoute,
+  LayoutDailyLogRoute: LayoutDailyLogRoute,
+  LayoutFoodsRoute: LayoutFoodsRoute,
   LayoutItemsRoute: LayoutItemsRoute,
-  LayoutMealsRoute: LayoutMealsRoute,
+  LayoutRecipesRoute: LayoutRecipesRoute,
   LayoutSettingsRoute: LayoutSettingsRoute,
   LayoutIndexRoute: LayoutIndexRoute,
 }

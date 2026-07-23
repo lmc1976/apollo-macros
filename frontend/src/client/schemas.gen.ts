@@ -57,6 +57,411 @@ export const Body_login_login_access_tokenSchema = {
     title: 'Body_login-login_access_token'
 } as const;
 
+export const DailyLogCreateSchema = {
+    properties: {
+        entry_datetime: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Entry Datetime'
+        },
+        label: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Label'
+        },
+        entry_type: {
+            '$ref': '#/components/schemas/EntryType'
+        },
+        food_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Food Id'
+        },
+        quantity_g: {
+            anyOf: [
+                {
+                    type: 'number',
+                    exclusiveMinimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Quantity G'
+        },
+        recipe_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Recipe Id'
+        },
+        recipe_servings: {
+            anyOf: [
+                {
+                    type: 'number',
+                    exclusiveMinimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Recipe Servings'
+        }
+    },
+    type: 'object',
+    required: ['entry_type'],
+    title: 'DailyLogCreate'
+} as const;
+
+export const DailyLogIngredientPublicSchema = {
+    properties: {
+        food_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Food Id'
+        },
+        food_name: {
+            type: 'string',
+            title: 'Food Name'
+        },
+        quantity_g: {
+            type: 'number',
+            title: 'Quantity G'
+        },
+        energy_kcal: {
+            anyOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Energy Kcal'
+        },
+        protein_g: {
+            anyOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Protein G'
+        },
+        carbohydrate_g: {
+            anyOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Carbohydrate G'
+        },
+        lipid_g: {
+            anyOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Lipid G'
+        },
+        cost_brl: {
+            anyOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Cost Brl'
+        }
+    },
+    type: 'object',
+    required: ['food_id', 'food_name', 'quantity_g'],
+    title: 'DailyLogIngredientPublic'
+} as const;
+
+export const DailyLogPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        owner_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Owner Id'
+        },
+        entry_datetime: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Entry Datetime'
+        },
+        label: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Label'
+        },
+        entry_type: {
+            '$ref': '#/components/schemas/EntryType'
+        },
+        food_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Food Id'
+        },
+        quantity_g: {
+            anyOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Quantity G'
+        },
+        recipe_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Recipe Id'
+        },
+        recipe_servings: {
+            anyOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Recipe Servings'
+        },
+        food_name: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Food Name'
+        },
+        recipe_name: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Recipe Name'
+        },
+        energy_kcal: {
+            type: 'number',
+            title: 'Energy Kcal'
+        },
+        protein_g: {
+            type: 'number',
+            title: 'Protein G'
+        },
+        carbohydrate_g: {
+            type: 'number',
+            title: 'Carbohydrate G'
+        },
+        lipid_g: {
+            type: 'number',
+            title: 'Lipid G'
+        },
+        cost_brl: {
+            type: 'number',
+            title: 'Cost Brl'
+        },
+        ingredients: {
+            anyOf: [
+                {
+                    items: {
+                        '$ref': '#/components/schemas/DailyLogIngredientPublic'
+                    },
+                    type: 'array'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Ingredients'
+        }
+    },
+    type: 'object',
+    required: ['id', 'owner_id', 'entry_datetime', 'entry_type', 'energy_kcal', 'protein_g', 'carbohydrate_g', 'lipid_g', 'cost_brl'],
+    title: 'DailyLogPublic'
+} as const;
+
+export const DailyLogUpdateSchema = {
+    properties: {
+        entry_datetime: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Entry Datetime'
+        },
+        label: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Label'
+        },
+        entry_type: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/EntryType'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        },
+        food_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Food Id'
+        },
+        quantity_g: {
+            anyOf: [
+                {
+                    type: 'number',
+                    exclusiveMinimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Quantity G'
+        },
+        recipe_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Recipe Id'
+        },
+        recipe_servings: {
+            anyOf: [
+                {
+                    type: 'number',
+                    exclusiveMinimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Recipe Servings'
+        }
+    },
+    type: 'object',
+    title: 'DailyLogUpdate'
+} as const;
+
+export const DailyLogsPublicSchema = {
+    properties: {
+        data: {
+            items: {
+                '$ref': '#/components/schemas/DailyLogPublic'
+            },
+            type: 'array',
+            title: 'Data'
+        },
+        count: {
+            type: 'integer',
+            title: 'Count'
+        }
+    },
+    type: 'object',
+    required: ['data', 'count'],
+    title: 'DailyLogsPublic'
+} as const;
+
+export const EntryTypeSchema = {
+    type: 'string',
+    enum: ['food', 'recipe'],
+    title: 'EntryType'
+} as const;
+
 export const FoodCreateSchema = {
     properties: {
         name: {
@@ -405,110 +810,6 @@ export const FoodCreateSchema = {
     type: 'object',
     required: ['name'],
     title: 'FoodCreate'
-} as const;
-
-export const FoodEntryCreateSchema = {
-    properties: {
-        food_id: {
-            type: 'string',
-            format: 'uuid',
-            title: 'Food Id'
-        },
-        quantity_g: {
-            type: 'number',
-            exclusiveMinimum: 0,
-            title: 'Quantity G'
-        }
-    },
-    type: 'object',
-    required: ['food_id', 'quantity_g'],
-    title: 'FoodEntryCreate'
-} as const;
-
-export const FoodEntryPublicSchema = {
-    properties: {
-        id: {
-            type: 'string',
-            format: 'uuid',
-            title: 'Id'
-        },
-        meal_id: {
-            type: 'string',
-            format: 'uuid',
-            title: 'Meal Id'
-        },
-        food_id: {
-            type: 'string',
-            format: 'uuid',
-            title: 'Food Id'
-        },
-        food_name: {
-            type: 'string',
-            title: 'Food Name'
-        },
-        quantity_g: {
-            type: 'number',
-            title: 'Quantity G'
-        },
-        energy_kcal: {
-            anyOf: [
-                {
-                    type: 'number'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Energy Kcal'
-        },
-        protein_g: {
-            anyOf: [
-                {
-                    type: 'number'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Protein G'
-        },
-        carbohydrate_g: {
-            anyOf: [
-                {
-                    type: 'number'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Carbohydrate G'
-        },
-        lipid_g: {
-            anyOf: [
-                {
-                    type: 'number'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Lipid G'
-        },
-        cost_brl: {
-            anyOf: [
-                {
-                    type: 'number'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Cost Brl'
-        }
-    },
-    type: 'object',
-    required: ['id', 'meal_id', 'food_id', 'food_name', 'quantity_g'],
-    title: 'FoodEntryPublic'
 } as const;
 
 export const FoodPublicSchema = {
@@ -1392,187 +1693,6 @@ export const ItemsPublicSchema = {
     title: 'ItemsPublic'
 } as const;
 
-export const MealCreateSchema = {
-    properties: {
-        label: {
-            type: 'string',
-            maxLength: 255,
-            minLength: 1,
-            title: 'Label'
-        },
-        meal_datetime: {
-            type: 'string',
-            format: 'date-time',
-            title: 'Meal Datetime'
-        },
-        is_recipe: {
-            type: 'boolean',
-            title: 'Is Recipe',
-            default: false
-        },
-        food_entries: {
-            items: {
-                '$ref': '#/components/schemas/FoodEntryCreate'
-            },
-            type: 'array',
-            title: 'Food Entries',
-            default: []
-        }
-    },
-    type: 'object',
-    required: ['label'],
-    title: 'MealCreate'
-} as const;
-
-export const MealPublicSchema = {
-    properties: {
-        label: {
-            type: 'string',
-            maxLength: 255,
-            minLength: 1,
-            title: 'Label'
-        },
-        meal_datetime: {
-            type: 'string',
-            format: 'date-time',
-            title: 'Meal Datetime'
-        },
-        is_recipe: {
-            type: 'boolean',
-            title: 'Is Recipe',
-            default: false
-        },
-        id: {
-            type: 'string',
-            format: 'uuid',
-            title: 'Id'
-        },
-        owner_id: {
-            type: 'string',
-            format: 'uuid',
-            title: 'Owner Id'
-        },
-        created_at: {
-            anyOf: [
-                {
-                    type: 'string',
-                    format: 'date-time'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Created At'
-        },
-        food_entries: {
-            items: {
-                '$ref': '#/components/schemas/FoodEntryPublic'
-            },
-            type: 'array',
-            title: 'Food Entries'
-        },
-        total_energy_kcal: {
-            type: 'number',
-            title: 'Total Energy Kcal'
-        },
-        total_protein_g: {
-            type: 'number',
-            title: 'Total Protein G'
-        },
-        total_carbohydrate_g: {
-            type: 'number',
-            title: 'Total Carbohydrate G'
-        },
-        total_lipid_g: {
-            type: 'number',
-            title: 'Total Lipid G'
-        },
-        total_cost_brl: {
-            type: 'number',
-            title: 'Total Cost Brl'
-        }
-    },
-    type: 'object',
-    required: ['label', 'id', 'owner_id', 'food_entries', 'total_energy_kcal', 'total_protein_g', 'total_carbohydrate_g', 'total_lipid_g', 'total_cost_brl'],
-    title: 'MealPublic'
-} as const;
-
-export const MealUpdateSchema = {
-    properties: {
-        label: {
-            anyOf: [
-                {
-                    type: 'string',
-                    maxLength: 255,
-                    minLength: 1
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Label'
-        },
-        meal_datetime: {
-            anyOf: [
-                {
-                    type: 'string',
-                    format: 'date-time'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Meal Datetime'
-        },
-        is_recipe: {
-            anyOf: [
-                {
-                    type: 'boolean'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Is Recipe'
-        },
-        food_entries: {
-            anyOf: [
-                {
-                    items: {
-                        '$ref': '#/components/schemas/FoodEntryCreate'
-                    },
-                    type: 'array'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Food Entries'
-        }
-    },
-    type: 'object',
-    title: 'MealUpdate'
-} as const;
-
-export const MealsPublicSchema = {
-    properties: {
-        data: {
-            items: {
-                '$ref': '#/components/schemas/MealPublic'
-            },
-            type: 'array',
-            title: 'Data'
-        },
-        count: {
-            type: 'integer',
-            title: 'Count'
-        }
-    },
-    type: 'object',
-    required: ['data', 'count'],
-    title: 'MealsPublic'
-} as const;
-
 export const MessageSchema = {
     properties: {
         message: {
@@ -1626,6 +1746,248 @@ export const PrivateUserCreateSchema = {
     type: 'object',
     required: ['email', 'password', 'full_name'],
     title: 'PrivateUserCreate'
+} as const;
+
+export const RecipeCreateSchema = {
+    properties: {
+        name: {
+            type: 'string',
+            maxLength: 255,
+            minLength: 1,
+            title: 'Name'
+        },
+        ingredients: {
+            items: {
+                '$ref': '#/components/schemas/RecipeIngredientCreate'
+            },
+            type: 'array',
+            title: 'Ingredients',
+            default: []
+        }
+    },
+    type: 'object',
+    required: ['name'],
+    title: 'RecipeCreate'
+} as const;
+
+export const RecipeIngredientCreateSchema = {
+    properties: {
+        food_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Food Id'
+        },
+        quantity_g: {
+            type: 'number',
+            exclusiveMinimum: 0,
+            title: 'Quantity G'
+        }
+    },
+    type: 'object',
+    required: ['food_id', 'quantity_g'],
+    title: 'RecipeIngredientCreate'
+} as const;
+
+export const RecipeIngredientPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        recipe_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Recipe Id'
+        },
+        food_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Food Id'
+        },
+        food_name: {
+            type: 'string',
+            title: 'Food Name'
+        },
+        quantity_g: {
+            type: 'number',
+            title: 'Quantity G'
+        },
+        energy_kcal: {
+            anyOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Energy Kcal'
+        },
+        protein_g: {
+            anyOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Protein G'
+        },
+        carbohydrate_g: {
+            anyOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Carbohydrate G'
+        },
+        lipid_g: {
+            anyOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Lipid G'
+        },
+        cost_brl: {
+            anyOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Cost Brl'
+        }
+    },
+    type: 'object',
+    required: ['id', 'recipe_id', 'food_id', 'food_name', 'quantity_g'],
+    title: 'RecipeIngredientPublic'
+} as const;
+
+export const RecipePublicSchema = {
+    properties: {
+        name: {
+            type: 'string',
+            maxLength: 255,
+            minLength: 1,
+            title: 'Name'
+        },
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        owner_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Owner Id'
+        },
+        created_at: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Created At'
+        },
+        ingredients: {
+            items: {
+                '$ref': '#/components/schemas/RecipeIngredientPublic'
+            },
+            type: 'array',
+            title: 'Ingredients'
+        },
+        total_energy_kcal: {
+            type: 'number',
+            title: 'Total Energy Kcal'
+        },
+        total_protein_g: {
+            type: 'number',
+            title: 'Total Protein G'
+        },
+        total_carbohydrate_g: {
+            type: 'number',
+            title: 'Total Carbohydrate G'
+        },
+        total_lipid_g: {
+            type: 'number',
+            title: 'Total Lipid G'
+        },
+        total_cost_brl: {
+            type: 'number',
+            title: 'Total Cost Brl'
+        }
+    },
+    type: 'object',
+    required: ['name', 'id', 'owner_id', 'ingredients', 'total_energy_kcal', 'total_protein_g', 'total_carbohydrate_g', 'total_lipid_g', 'total_cost_brl'],
+    title: 'RecipePublic'
+} as const;
+
+export const RecipeUpdateSchema = {
+    properties: {
+        name: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255,
+                    minLength: 1
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Name'
+        },
+        ingredients: {
+            anyOf: [
+                {
+                    items: {
+                        '$ref': '#/components/schemas/RecipeIngredientCreate'
+                    },
+                    type: 'array'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Ingredients'
+        }
+    },
+    type: 'object',
+    title: 'RecipeUpdate'
+} as const;
+
+export const RecipesPublicSchema = {
+    properties: {
+        data: {
+            items: {
+                '$ref': '#/components/schemas/RecipePublic'
+            },
+            type: 'array',
+            title: 'Data'
+        },
+        count: {
+            type: 'integer',
+            title: 'Count'
+        }
+    },
+    type: 'object',
+    required: ['data', 'count'],
+    title: 'RecipesPublic'
 } as const;
 
 export const TokenSchema = {

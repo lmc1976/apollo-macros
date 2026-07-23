@@ -5,14 +5,16 @@ from sqlmodel import Session, select
 
 from app.core.security import get_password_hash, verify_password
 from app.models import (
+    DailyLog,
+    DailyLogCreate,
     Food,
     FoodCreate,
-    FoodEntry,
-    FoodEntryCreate,
     Item,
     ItemCreate,
-    Meal,
-    MealCreate,
+    Recipe,
+    RecipeCreate,
+    RecipeIngredient,
+    RecipeIngredientCreate,
     User,
     UserCreate,
     UserUpdate,
@@ -88,25 +90,46 @@ def create_food(*, session: Session, food_in: FoodCreate) -> Food:
     return db_food
 
 
-def create_meal(*, session: Session, meal_in: MealCreate, owner_id: uuid.UUID) -> Meal:
-    meal_data = meal_in.model_dump(exclude={"food_entries"})
-    db_meal = Meal.model_validate(meal_data, update={"owner_id": owner_id})
-    session.add(db_meal)
+def create_recipe(
+    *, session: Session, recipe_in: RecipeCreate, owner_id: uuid.UUID
+) -> Recipe:
+    recipe_data = recipe_in.model_dump(exclude={"ingredients"})
+    db_recipe = Recipe.model_validate(recipe_data, update={"owner_id": owner_id})
+    session.add(db_recipe)
     session.flush()
-    for entry_in in meal_in.food_entries:
-        db_entry = FoodEntry.model_validate(entry_in, update={"meal_id": db_meal.id})
-        session.add(db_entry)
+    for ingredient_in in recipe_in.ingredients:
+        db_ingredient = RecipeIngredient.model_validate(
+            ingredient_in, update={"recipe_id": db_recipe.id}
+        )
+        session.add(db_ingredient)
     session.commit()
-    session.refresh(db_meal)
-    return db_meal
+    session.refresh(db_recipe)
+    return db_recipe
 
 
-def replace_meal_food_entries(
-    *, session: Session, meal: Meal, food_entries_in: list[FoodEntryCreate]
+def replace_recipe_ingredients(
+    *,
+    session: Session,
+    recipe: Recipe,
+    ingredients_in: list[RecipeIngredientCreate],
 ) -> None:
-    for entry in list(meal.food_entries):
-        session.delete(entry)
+    for ingredient in list(recipe.ingredients):
+        session.delete(ingredient)
     session.flush()
-    for entry_in in food_entries_in:
-        db_entry = FoodEntry.model_validate(entry_in, update={"meal_id": meal.id})
-        session.add(db_entry)
+    for ingredient_in in ingredients_in:
+        db_ingredient = RecipeIngredient.model_validate(
+            ingredient_in, update={"recipe_id": recipe.id}
+        )
+        session.add(db_ingredient)
+
+
+def create_daily_log(
+    *, session: Session, daily_log_in: DailyLogCreate, owner_id: uuid.UUID
+) -> DailyLog:
+    db_daily_log = DailyLog.model_validate(
+        daily_log_in, update={"owner_id": owner_id}
+    )
+    session.add(db_daily_log)
+    session.commit()
+    session.refresh(db_daily_log)
+    return db_daily_log

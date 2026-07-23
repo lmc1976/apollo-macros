@@ -1,6 +1,7 @@
 import { Plus, Trash2 } from "lucide-react"
 import { type UseFormReturn, useFieldArray } from "react-hook-form"
 
+import { FoodCombobox } from "@/components/Common/FoodCombobox"
 import { Button } from "@/components/ui/button"
 import {
   FormControl,
@@ -10,18 +11,17 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { FoodCombobox } from "./FoodCombobox"
-import type { MealFormData } from "./mealFormSchema"
+import type { RecipeFormData } from "./recipeFormSchema"
 
-interface FoodEntryFieldsProps {
-  form: UseFormReturn<MealFormData>
+interface RecipeIngredientFieldsProps {
+  form: UseFormReturn<RecipeFormData>
 }
 
-export function FoodEntryFields({ form }: FoodEntryFieldsProps) {
+export function RecipeIngredientFields({ form }: RecipeIngredientFieldsProps) {
   const { control, watch, setValue, formState } = form
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "food_entries",
+    name: "ingredients",
   })
 
   return (
@@ -30,9 +30,9 @@ export function FoodEntryFields({ form }: FoodEntryFieldsProps) {
         Alimentos <span className="text-destructive">*</span>
       </FormLabel>
       {fields.map((field, index) => {
-        const foodId = watch(`food_entries.${index}.food_id`)
-        const foodName = watch(`food_entries.${index}.food_name`)
-        const foodIdError = formState.errors.food_entries?.[index]?.food_id
+        const foodId = watch(`ingredients.${index}.food_id`)
+        const foodName = watch(`ingredients.${index}.food_name`)
+        const foodIdError = formState.errors.ingredients?.[index]?.food_id
 
         return (
           <div key={field.id} className="flex items-start gap-2">
@@ -40,10 +40,10 @@ export function FoodEntryFields({ form }: FoodEntryFieldsProps) {
               <FoodCombobox
                 value={foodId ? { id: foodId, name: foodName } : null}
                 onChange={(food) => {
-                  setValue(`food_entries.${index}.food_id`, food.id, {
+                  setValue(`ingredients.${index}.food_id`, food.id, {
                     shouldValidate: true,
                   })
-                  setValue(`food_entries.${index}.food_name`, food.name)
+                  setValue(`ingredients.${index}.food_name`, food.name)
                 }}
               />
               {foodIdError && (
@@ -56,7 +56,7 @@ export function FoodEntryFields({ form }: FoodEntryFieldsProps) {
             <div className="w-28">
               <FormField
                 control={control}
-                name={`food_entries.${index}.quantity_g`}
+                name={`ingredients.${index}.quantity_g`}
                 render={({ field: qtyField }) => (
                   <FormItem>
                     <FormControl>

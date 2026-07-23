@@ -5,10 +5,10 @@ from sqlmodel import Session
 
 from app.core.config import settings
 from tests.utils.food import create_random_food
-from tests.utils.meal import create_random_meal
+from tests.utils.recipe import create_random_recipe
 
 
-def test_create_meal_with_food_entries(
+def test_create_recipe_with_ingredients(
     client: TestClient, superuser_token_headers: dict[str, str], db: Session
 ) -> None:
     food = create_random_food(
@@ -20,24 +20,23 @@ def test_create_meal_with_food_entries(
         lipid_g=0.3,
     )
     data = {
-        "label": "Almoço",
-        "is_recipe": False,
-        "food_entries": [{"food_id": str(food.id), "quantity_g": 200}],
+        "name": "Arroz com frango",
+        "ingredients": [{"food_id": str(food.id), "quantity_g": 200}],
     }
     response = client.post(
-        f"{settings.API_V1_STR}/meals/",
+        f"{settings.API_V1_STR}/recipes/",
         headers=superuser_token_headers,
         json=data,
     )
     assert response.status_code == 200
     content = response.json()
-    assert content["label"] == "Almoço"
-    assert len(content["food_entries"]) == 1
-    entry = content["food_entries"][0]
-    assert entry["food_name"] == "Test Rice"
-    assert entry["quantity_g"] == 200
-    assert entry["energy_kcal"] == 260  # 130 * 2
-    assert entry["protein_g"] == 5.4
+    assert content["name"] == "Arroz com frango"
+    assert len(content["ingredients"]) == 1
+    ingredient = content["ingredients"][0]
+    assert ingredient["food_name"] == "Test Rice"
+    assert ingredient["quantity_g"] == 200
+    assert ingredient["energy_kcal"] == 260  # 130 * 2
+    assert ingredient["protein_g"] == 5.4
     assert content["total_energy_kcal"] == 260
     assert content["total_protein_g"] == 5.4
     assert content["total_carbohydrate_g"] == 56
@@ -45,35 +44,35 @@ def test_create_meal_with_food_entries(
     assert content["total_cost_brl"] == 0
 
 
-def test_create_meal_computes_cost(
+def test_create_recipe_computes_cost(
     client: TestClient, superuser_token_headers: dict[str, str], db: Session
 ) -> None:
     food = create_random_food(db, price_brl=10.0, price_reference_g=500)
     data = {
-        "label": "Com preço",
-        "food_entries": [{"food_id": str(food.id), "quantity_g": 250}],
+        "name": "Com preço",
+        "ingredients": [{"food_id": str(food.id), "quantity_g": 250}],
     }
     response = client.post(
-        f"{settings.API_V1_STR}/meals/",
+        f"{settings.API_V1_STR}/recipes/",
         headers=superuser_token_headers,
         json=data,
     )
     assert response.status_code == 200
     content = response.json()
-    assert content["food_entries"][0]["cost_brl"] == 5.0
+    assert content["ingredients"][0]["cost_brl"] == 5.0
     assert content["total_cost_brl"] == 5.0
 
 
-def test_create_meal_unknown_food(
+def test_create_recipe_unknown_food(
     client: TestClient, superuser_token_headers: dict[str, str]
 ) -> None:
     unknown_id = uuid.uuid4()
     data = {
-        "label": "Refeição inválida",
-        "food_entries": [{"food_id": str(unknown_id), "quantity_g": 100}],
+        "name": "Receita inválida",
+        "ingredients": [{"food_id": str(unknown_id), "quantity_g": 100}],
     }
     response = client.post(
-        f"{settings.API_V1_STR}/meals/",
+        f"{settings.API_V1_STR}/recipes/",
         headers=superuser_token_headers,
         json=data,
     )
@@ -81,50 +80,50 @@ def test_create_meal_unknown_food(
     assert str(unknown_id) in response.json()["detail"]
 
 
-def test_read_meal(
+def test_read_recipe(
     client: TestClient, superuser_token_headers: dict[str, str], db: Session
 ) -> None:
-    meal = create_random_meal(db)
+    recipe = create_random_recipe(db)
     response = client.get(
-        f"{settings.API_V1_STR}/meals/{meal.id}",
+        f"{settings.API_V1_STR}/recipes/{recipe.id}",
         headers=superuser_token_headers,
     )
     assert response.status_code == 200
     content = response.json()
-    assert content["id"] == str(meal.id)
-    assert content["label"] == meal.label
+    assert content["id"] == str(recipe.id)
+    assert content["name"] == recipe.name
 
 
-def test_read_meal_not_found(
+def test_read_recipe_not_found(
     client: TestClient, superuser_token_headers: dict[str, str]
 ) -> None:
     response = client.get(
-        f"{settings.API_V1_STR}/meals/{uuid.uuid4()}",
+        f"{settings.API_V1_STR}/recipes/{uuid.uuid4()}",
         headers=superuser_token_headers,
     )
     assert response.status_code == 404
-    assert response.json()["detail"] == "Meal not found"
+    assert response.json()["detail"] == "Recipe not found"
 
 
-def test_read_meal_not_enough_permissions(
+def test_read_recipe_not_enough_permissions(
     client: TestClient, normal_user_token_headers: dict[str, str], db: Session
 ) -> None:
-    meal = create_random_meal(db)
+    recipe = create_random_recipe(db)
     response = client.get(
-        f"{settings.API_V1_STR}/meals/{meal.id}",
+        f"{settings.API_V1_STR}/recipes/{recipe.id}",
         headers=normal_user_token_headers,
     )
     assert response.status_code == 403
     assert response.json()["detail"] == "Not enough permissions"
 
 
-def test_read_meals(
+def test_read_recipes(
     client: TestClient, superuser_token_headers: dict[str, str], db: Session
 ) -> None:
-    create_random_meal(db)
-    create_random_meal(db)
+    create_random_recipe(db)
+    create_random_recipe(db)
     response = client.get(
-        f"{settings.API_V1_STR}/meals/",
+        f"{settings.API_V1_STR}/recipes/",
         headers=superuser_token_headers,
     )
     assert response.status_code == 200
@@ -132,33 +131,32 @@ def test_read_meals(
     assert len(content["data"]) >= 2
 
 
-def test_update_meal_fields(
+def test_update_recipe_fields(
     client: TestClient, superuser_token_headers: dict[str, str], db: Session
 ) -> None:
-    meal = create_random_meal(db)
+    recipe = create_random_recipe(db)
     response = client.put(
-        f"{settings.API_V1_STR}/meals/{meal.id}",
+        f"{settings.API_V1_STR}/recipes/{recipe.id}",
         headers=superuser_token_headers,
-        json={"label": "Updated label", "is_recipe": True},
+        json={"name": "Updated name"},
     )
     assert response.status_code == 200
     content = response.json()
-    assert content["label"] == "Updated label"
-    assert content["is_recipe"] is True
-    # existing food entries are preserved when not provided in the update
-    assert len(content["food_entries"]) == 1
+    assert content["name"] == "Updated name"
+    # existing ingredients are preserved when not provided in the update
+    assert len(content["ingredients"]) == 1
 
 
-def test_update_meal_replaces_food_entries(
+def test_update_recipe_replaces_ingredients(
     client: TestClient, superuser_token_headers: dict[str, str], db: Session
 ) -> None:
-    meal = create_random_meal(db)
+    recipe = create_random_recipe(db)
     new_food = create_random_food(db)
     response = client.put(
-        f"{settings.API_V1_STR}/meals/{meal.id}",
+        f"{settings.API_V1_STR}/recipes/{recipe.id}",
         headers=superuser_token_headers,
         json={
-            "food_entries": [
+            "ingredients": [
                 {"food_id": str(new_food.id), "quantity_g": 50},
                 {"food_id": str(new_food.id), "quantity_g": 75},
             ]
@@ -166,64 +164,87 @@ def test_update_meal_replaces_food_entries(
     )
     assert response.status_code == 200
     content = response.json()
-    assert len(content["food_entries"]) == 2
+    assert len(content["ingredients"]) == 2
 
 
-def test_update_meal_not_found(
+def test_update_recipe_not_found(
     client: TestClient, superuser_token_headers: dict[str, str]
 ) -> None:
     response = client.put(
-        f"{settings.API_V1_STR}/meals/{uuid.uuid4()}",
+        f"{settings.API_V1_STR}/recipes/{uuid.uuid4()}",
         headers=superuser_token_headers,
-        json={"label": "Updated label"},
+        json={"name": "Updated name"},
     )
     assert response.status_code == 404
-    assert response.json()["detail"] == "Meal not found"
+    assert response.json()["detail"] == "Recipe not found"
 
 
-def test_update_meal_not_enough_permissions(
+def test_update_recipe_not_enough_permissions(
     client: TestClient, normal_user_token_headers: dict[str, str], db: Session
 ) -> None:
-    meal = create_random_meal(db)
+    recipe = create_random_recipe(db)
     response = client.put(
-        f"{settings.API_V1_STR}/meals/{meal.id}",
+        f"{settings.API_V1_STR}/recipes/{recipe.id}",
         headers=normal_user_token_headers,
-        json={"label": "Updated label"},
+        json={"name": "Updated name"},
     )
     assert response.status_code == 403
     assert response.json()["detail"] == "Not enough permissions"
 
 
-def test_delete_meal(
+def test_delete_recipe(
     client: TestClient, superuser_token_headers: dict[str, str], db: Session
 ) -> None:
-    meal = create_random_meal(db)
+    recipe = create_random_recipe(db)
     response = client.delete(
-        f"{settings.API_V1_STR}/meals/{meal.id}",
+        f"{settings.API_V1_STR}/recipes/{recipe.id}",
         headers=superuser_token_headers,
     )
     assert response.status_code == 200
-    assert response.json()["message"] == "Meal deleted successfully"
+    assert response.json()["message"] == "Recipe deleted successfully"
 
 
-def test_delete_meal_not_found(
+def test_delete_recipe_not_found(
     client: TestClient, superuser_token_headers: dict[str, str]
 ) -> None:
     response = client.delete(
-        f"{settings.API_V1_STR}/meals/{uuid.uuid4()}",
+        f"{settings.API_V1_STR}/recipes/{uuid.uuid4()}",
         headers=superuser_token_headers,
     )
     assert response.status_code == 404
-    assert response.json()["detail"] == "Meal not found"
+    assert response.json()["detail"] == "Recipe not found"
 
 
-def test_delete_meal_not_enough_permissions(
+def test_delete_recipe_not_enough_permissions(
     client: TestClient, normal_user_token_headers: dict[str, str], db: Session
 ) -> None:
-    meal = create_random_meal(db)
+    recipe = create_random_recipe(db)
     response = client.delete(
-        f"{settings.API_V1_STR}/meals/{meal.id}",
+        f"{settings.API_V1_STR}/recipes/{recipe.id}",
         headers=normal_user_token_headers,
     )
     assert response.status_code == 403
     assert response.json()["detail"] == "Not enough permissions"
+
+
+def test_delete_recipe_in_use_by_daily_log(
+    client: TestClient, superuser_token_headers: dict[str, str], db: Session
+) -> None:
+    recipe = create_random_recipe(db)
+    response = client.post(
+        f"{settings.API_V1_STR}/daily-logs/",
+        headers=superuser_token_headers,
+        json={
+            "entry_type": "recipe",
+            "recipe_id": str(recipe.id),
+            "recipe_servings": 1,
+        },
+    )
+    assert response.status_code == 200
+
+    response = client.delete(
+        f"{settings.API_V1_STR}/recipes/{recipe.id}",
+        headers=superuser_token_headers,
+    )
+    assert response.status_code == 400
+    assert "cannot be deleted" in response.json()["detail"]

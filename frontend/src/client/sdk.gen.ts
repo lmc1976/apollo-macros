@@ -3,7 +3,119 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { FoodsReadFoodsData, FoodsReadFoodsResponse, FoodsCreateFoodData, FoodsCreateFoodResponse, FoodsReadFoodData, FoodsReadFoodResponse, FoodsUpdateFoodData, FoodsUpdateFoodResponse, FoodsDeleteFoodData, FoodsDeleteFoodResponse, ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemData, ItemsCreateItemResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemData, ItemsUpdateItemResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, MealsReadMealsData, MealsReadMealsResponse, MealsCreateMealData, MealsCreateMealResponse, MealsReadMealData, MealsReadMealResponse, MealsUpdateMealData, MealsUpdateMealResponse, MealsDeleteMealData, MealsDeleteMealResponse, PrivateCreateUserData, PrivateCreateUserResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+import type { DailyLogsReadDailyLogsData, DailyLogsReadDailyLogsResponse, DailyLogsCreateDailyLogData, DailyLogsCreateDailyLogResponse, DailyLogsReadDailyLogData, DailyLogsReadDailyLogResponse, DailyLogsUpdateDailyLogData, DailyLogsUpdateDailyLogResponse, DailyLogsDeleteDailyLogData, DailyLogsDeleteDailyLogResponse, FoodsReadFoodsData, FoodsReadFoodsResponse, FoodsCreateFoodData, FoodsCreateFoodResponse, FoodsReadFoodData, FoodsReadFoodResponse, FoodsUpdateFoodData, FoodsUpdateFoodResponse, FoodsDeleteFoodData, FoodsDeleteFoodResponse, ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemData, ItemsCreateItemResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemData, ItemsUpdateItemResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, RecipesReadRecipesData, RecipesReadRecipesResponse, RecipesCreateRecipeData, RecipesCreateRecipeResponse, RecipesReadRecipeData, RecipesReadRecipeResponse, RecipesUpdateRecipeData, RecipesUpdateRecipeResponse, RecipesDeleteRecipeData, RecipesDeleteRecipeResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+
+export class DailyLogsService {
+    /**
+     * Read Daily Logs
+     * Retrieve daily log entries, with computed macro and cost totals.
+     * @param data The data for the request.
+     * @param data.skip
+     * @param data.limit
+     * @returns DailyLogsPublic Successful Response
+     * @throws ApiError
+     */
+    public static readDailyLogs(data: DailyLogsReadDailyLogsData = {}): CancelablePromise<DailyLogsReadDailyLogsResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/daily-logs/',
+            query: {
+                skip: data.skip,
+                limit: data.limit
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Create Daily Log
+     * Create a new daily log entry, referencing either a Food or a Recipe.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns DailyLogPublic Successful Response
+     * @throws ApiError
+     */
+    public static createDailyLog(data: DailyLogsCreateDailyLogData): CancelablePromise<DailyLogsCreateDailyLogResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/daily-logs/',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Read Daily Log
+     * Get a daily log entry by ID, with computed macro and cost totals.
+     * @param data The data for the request.
+     * @param data.id
+     * @returns DailyLogPublic Successful Response
+     * @throws ApiError
+     */
+    public static readDailyLog(data: DailyLogsReadDailyLogData): CancelablePromise<DailyLogsReadDailyLogResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/daily-logs/{id}',
+            path: {
+                id: data.id
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Update Daily Log
+     * Update a daily log entry. The merged result must still satisfy the
+     * food-xor-recipe shape rules.
+     * @param data The data for the request.
+     * @param data.id
+     * @param data.requestBody
+     * @returns DailyLogPublic Successful Response
+     * @throws ApiError
+     */
+    public static updateDailyLog(data: DailyLogsUpdateDailyLogData): CancelablePromise<DailyLogsUpdateDailyLogResponse> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/v1/daily-logs/{id}',
+            path: {
+                id: data.id
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Delete Daily Log
+     * Delete a daily log entry.
+     * @param data The data for the request.
+     * @param data.id
+     * @returns Message Successful Response
+     * @throws ApiError
+     */
+    public static deleteDailyLog(data: DailyLogsDeleteDailyLogData): CancelablePromise<DailyLogsDeleteDailyLogResponse> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/v1/daily-logs/{id}',
+            path: {
+                id: data.id
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
 
 export class FoodsService {
     /**
@@ -98,7 +210,8 @@ export class FoodsService {
     
     /**
      * Delete Food
-     * Delete a food, if it is not referenced by any meal.
+     * Delete a food, if it is not referenced by any recipe ingredient or
+     * daily log entry.
      * @param data The data for the request.
      * @param data.id
      * @returns Message Successful Response
@@ -326,117 +439,6 @@ export class LoginService {
     }
 }
 
-export class MealsService {
-    /**
-     * Read Meals
-     * Retrieve meals, with computed macro and cost totals.
-     * @param data The data for the request.
-     * @param data.skip
-     * @param data.limit
-     * @returns MealsPublic Successful Response
-     * @throws ApiError
-     */
-    public static readMeals(data: MealsReadMealsData = {}): CancelablePromise<MealsReadMealsResponse> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v1/meals/',
-            query: {
-                skip: data.skip,
-                limit: data.limit
-            },
-            errors: {
-                422: 'Validation Error'
-            }
-        });
-    }
-    
-    /**
-     * Create Meal
-     * Create a new meal, with its food entries.
-     * @param data The data for the request.
-     * @param data.requestBody
-     * @returns MealPublic Successful Response
-     * @throws ApiError
-     */
-    public static createMeal(data: MealsCreateMealData): CancelablePromise<MealsCreateMealResponse> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v1/meals/',
-            body: data.requestBody,
-            mediaType: 'application/json',
-            errors: {
-                422: 'Validation Error'
-            }
-        });
-    }
-    
-    /**
-     * Read Meal
-     * Get meal by ID, with computed macro and cost totals.
-     * @param data The data for the request.
-     * @param data.id
-     * @returns MealPublic Successful Response
-     * @throws ApiError
-     */
-    public static readMeal(data: MealsReadMealData): CancelablePromise<MealsReadMealResponse> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v1/meals/{id}',
-            path: {
-                id: data.id
-            },
-            errors: {
-                422: 'Validation Error'
-            }
-        });
-    }
-    
-    /**
-     * Update Meal
-     * Update a meal. If food_entries is provided, it replaces all existing entries.
-     * @param data The data for the request.
-     * @param data.id
-     * @param data.requestBody
-     * @returns MealPublic Successful Response
-     * @throws ApiError
-     */
-    public static updateMeal(data: MealsUpdateMealData): CancelablePromise<MealsUpdateMealResponse> {
-        return __request(OpenAPI, {
-            method: 'PUT',
-            url: '/api/v1/meals/{id}',
-            path: {
-                id: data.id
-            },
-            body: data.requestBody,
-            mediaType: 'application/json',
-            errors: {
-                422: 'Validation Error'
-            }
-        });
-    }
-    
-    /**
-     * Delete Meal
-     * Delete a meal and its food entries.
-     * @param data The data for the request.
-     * @param data.id
-     * @returns Message Successful Response
-     * @throws ApiError
-     */
-    public static deleteMeal(data: MealsDeleteMealData): CancelablePromise<MealsDeleteMealResponse> {
-        return __request(OpenAPI, {
-            method: 'DELETE',
-            url: '/api/v1/meals/{id}',
-            path: {
-                id: data.id
-            },
-            errors: {
-                422: 'Validation Error'
-            }
-        });
-    }
-}
-
 export class PrivateService {
     /**
      * Create User
@@ -452,6 +454,120 @@ export class PrivateService {
             url: '/api/v1/private/users/',
             body: data.requestBody,
             mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
+
+export class RecipesService {
+    /**
+     * Read Recipes
+     * Retrieve recipes, optionally searching by name.
+     * @param data The data for the request.
+     * @param data.q
+     * @param data.skip
+     * @param data.limit
+     * @returns RecipesPublic Successful Response
+     * @throws ApiError
+     */
+    public static readRecipes(data: RecipesReadRecipesData = {}): CancelablePromise<RecipesReadRecipesResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/recipes/',
+            query: {
+                q: data.q,
+                skip: data.skip,
+                limit: data.limit
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Create Recipe
+     * Create a new recipe, with its ingredients.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns RecipePublic Successful Response
+     * @throws ApiError
+     */
+    public static createRecipe(data: RecipesCreateRecipeData): CancelablePromise<RecipesCreateRecipeResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/recipes/',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Read Recipe
+     * Get recipe by ID, with computed macro and cost totals for one serving.
+     * @param data The data for the request.
+     * @param data.id
+     * @returns RecipePublic Successful Response
+     * @throws ApiError
+     */
+    public static readRecipe(data: RecipesReadRecipeData): CancelablePromise<RecipesReadRecipeResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/recipes/{id}',
+            path: {
+                id: data.id
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Update Recipe
+     * Update a recipe. If ingredients is provided, it replaces all existing ones.
+     * @param data The data for the request.
+     * @param data.id
+     * @param data.requestBody
+     * @returns RecipePublic Successful Response
+     * @throws ApiError
+     */
+    public static updateRecipe(data: RecipesUpdateRecipeData): CancelablePromise<RecipesUpdateRecipeResponse> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/v1/recipes/{id}',
+            path: {
+                id: data.id
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Delete Recipe
+     * Delete a recipe and its ingredients, if it is not referenced by any
+     * daily log entry.
+     * @param data The data for the request.
+     * @param data.id
+     * @returns Message Successful Response
+     * @throws ApiError
+     */
+    public static deleteRecipe(data: RecipesDeleteRecipeData): CancelablePromise<RecipesDeleteRecipeResponse> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/v1/recipes/{id}',
+            path: {
+                id: data.id
+            },
             errors: {
                 422: 'Validation Error'
             }

@@ -1,8 +1,9 @@
 import uuid
 from datetime import datetime, timezone
+from enum import Enum
 
-from pydantic import EmailStr
-from sqlalchemy import DateTime
+from pydantic import EmailStr, model_validator
+from sqlalchemy import DateTime, String
 from sqlmodel import Field, Relationship, SQLModel
 
 
@@ -54,7 +55,10 @@ class User(UserBase, table=True):
         sa_type=DateTime(timezone=True),  # type: ignore
     )
     items: list["Item"] = Relationship(back_populates="owner", cascade_delete=True)
-    meals: list["Meal"] = Relationship(back_populates="owner", cascade_delete=True)
+    recipes: list["Recipe"] = Relationship(back_populates="owner", cascade_delete=True)
+    daily_logs: list["DailyLog"] = Relationship(
+        back_populates="owner", cascade_delete=True
+    )
 
 
 # Properties to return via API, id is always required
@@ -182,34 +186,34 @@ class FoodsPublic(SQLModel):
     count: int
 
 
-# A single food, with its quantity, within a Meal
-class FoodEntryBase(SQLModel):
+# A single food, with its quantity, within a Recipe
+class RecipeIngredientBase(SQLModel):
     food_id: uuid.UUID
     quantity_g: float = Field(gt=0)
 
 
-# Properties to receive on food entry creation, nested under a meal
-class FoodEntryCreate(FoodEntryBase):
+# Properties to receive on ingredient creation, nested under a recipe
+class RecipeIngredientCreate(RecipeIngredientBase):
     pass
 
 
 # Database model, database table inferred from class name
-class FoodEntry(FoodEntryBase, table=True):
+class RecipeIngredient(RecipeIngredientBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-    meal_id: uuid.UUID = Field(
-        foreign_key="meal.id", nullable=False, ondelete="CASCADE"
+    recipe_id: uuid.UUID = Field(
+        foreign_key="recipe.id", nullable=False, ondelete="CASCADE"
     )
     food_id: uuid.UUID = Field(foreign_key="food.id", nullable=False)
-    meal: "Meal" = Relationship(back_populates="food_entries")
+    recipe: "Recipe" = Relationship(back_populates="ingredients")
     food: Food = Relationship()
 
 
 # Properties to return via API, id is always required. Nutritional values and
 # cost are computed dynamically from the linked Food and quantity_g, they are
 # not stored.
-class FoodEntryPublic(SQLModel):
+class RecipeIngredientPublic(SQLModel):
     id: uuid.UUID
-    meal_id: uuid.UUID
+    recipe_id: uuid.UUID
     food_id: uuid.UUID
     food_name: str
     quantity_g: float
@@ -221,31 +225,26 @@ class FoodEntryPublic(SQLModel):
 
 
 # Shared properties
-class MealBase(SQLModel):
-    label: str = Field(min_length=1, max_length=255)
-    meal_datetime: datetime = Field(
-        default_factory=get_datetime_utc,
-        sa_type=DateTime(timezone=True),  # type: ignore
-    )
-    is_recipe: bool = False
+# A Recipe is a reusable template (no date/time) representing a fixed
+# combination of foods, e.g. "Omelete" = Egg + Salt + Cheese.
+class RecipeBase(SQLModel):
+    name: str = Field(min_length=1, max_length=255)
 
 
-# Properties to receive on meal creation
-class MealCreate(MealBase):
-    food_entries: list[FoodEntryCreate] = []
+# Properties to receive on recipe creation
+class RecipeCreate(RecipeBase):
+    ingredients: list[RecipeIngredientCreate] = []
 
 
-# Properties to receive on meal update. When food_entries is provided, it
-# fully replaces the meal's existing entries.
-class MealUpdate(MealBase):
-    label: str | None = Field(default=None, min_length=1, max_length=255)  # type: ignore
-    meal_datetime: datetime | None = Field(default=None)  # type: ignore
-    is_recipe: bool | None = Field(default=None)  # type: ignore
-    food_entries: list[FoodEntryCreate] | None = None
+# Properties to receive on recipe update. When ingredients is provided, it
+# fully replaces the recipe's existing ingredients.
+class RecipeUpdate(RecipeBase):
+    name: str | None = Field(default=None, min_length=1, max_length=255)  # type: ignore
+    ingredients: list[RecipeIngredientCreate] | None = None
 
 
 # Database model, database table inferred from class name
-class Meal(MealBase, table=True):
+class Recipe(RecipeBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     created_at: datetime | None = Field(
         default_factory=get_datetime_utc,
@@ -254,19 +253,19 @@ class Meal(MealBase, table=True):
     owner_id: uuid.UUID = Field(
         foreign_key="user.id", nullable=False, ondelete="CASCADE"
     )
-    owner: User | None = Relationship(back_populates="meals")
-    food_entries: list[FoodEntry] = Relationship(
-        back_populates="meal", cascade_delete=True
+    owner: User | None = Relationship(back_populates="recipes")
+    ingredients: list[RecipeIngredient] = Relationship(
+        back_populates="recipe", cascade_delete=True
     )
 
 
 # Properties to return via API, id is always required. Totals are computed
-# dynamically as the sum of the meal's food entries.
-class MealPublic(MealBase):
+# dynamically as the sum of the recipe's ingredients (for a single serving).
+class RecipePublic(RecipeBase):
     id: uuid.UUID
     owner_id: uuid.UUID
     created_at: datetime | None = None
-    food_entries: list[FoodEntryPublic]
+    ingredients: list[RecipeIngredientPublic]
     total_energy_kcal: float
     total_protein_g: float
     total_carbohydrate_g: float
@@ -274,8 +273,123 @@ class MealPublic(MealBase):
     total_cost_brl: float
 
 
-class MealsPublic(SQLModel):
-    data: list[MealPublic]
+class RecipesPublic(SQLModel):
+    data: list[RecipePublic]
+    count: int
+
+
+class EntryType(str, Enum):
+    FOOD = "food"
+    RECIPE = "recipe"
+
+
+# Shared properties
+# A DailyLog is the actual record of what was eaten at a specific date/time.
+# It references either a Food directly (food_id + quantity_g) or a whole
+# Recipe (recipe_id + recipe_servings), never both.
+class DailyLogBase(SQLModel):
+    entry_datetime: datetime = Field(
+        default_factory=get_datetime_utc,
+        sa_type=DateTime(timezone=True),  # type: ignore
+    )
+    label: str | None = Field(default=None, max_length=255)
+    entry_type: EntryType = Field(sa_type=String(length=20))  # type: ignore
+    food_id: uuid.UUID | None = Field(default=None)
+    quantity_g: float | None = Field(default=None, gt=0)
+    recipe_id: uuid.UUID | None = Field(default=None)
+    recipe_servings: float | None = Field(default=None, gt=0)
+
+    @model_validator(mode="after")
+    def _check_entry_shape(self) -> "DailyLogBase":
+        if self.entry_type == EntryType.FOOD:
+            if self.food_id is None or self.quantity_g is None:
+                raise ValueError(
+                    "food_id and quantity_g are required when entry_type is 'food'"
+                )
+            if self.recipe_id is not None or self.recipe_servings is not None:
+                raise ValueError(
+                    "recipe_id/recipe_servings must not be set when entry_type is 'food'"
+                )
+        else:
+            if self.recipe_id is None or self.recipe_servings is None:
+                raise ValueError(
+                    "recipe_id and recipe_servings are required when entry_type is 'recipe'"
+                )
+            if self.food_id is not None or self.quantity_g is not None:
+                raise ValueError(
+                    "food_id/quantity_g must not be set when entry_type is 'recipe'"
+                )
+        return self
+
+
+# Properties to receive on daily log creation
+class DailyLogCreate(DailyLogBase):
+    pass
+
+
+# Properties to receive on daily log update. The full, merged entry is
+# re-validated by the route, since a partial patch alone cannot be checked
+# against the food/recipe shape rules above.
+class DailyLogUpdate(SQLModel):
+    entry_datetime: datetime | None = Field(default=None)
+    label: str | None = Field(default=None, max_length=255)
+    entry_type: EntryType | None = Field(default=None)
+    food_id: uuid.UUID | None = Field(default=None)
+    quantity_g: float | None = Field(default=None, gt=0)
+    recipe_id: uuid.UUID | None = Field(default=None)
+    recipe_servings: float | None = Field(default=None, gt=0)
+
+
+# Database model, database table inferred from class name
+class DailyLog(DailyLogBase, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    owner_id: uuid.UUID = Field(
+        foreign_key="user.id", nullable=False, ondelete="CASCADE"
+    )
+    food_id: uuid.UUID | None = Field(default=None, foreign_key="food.id")
+    recipe_id: uuid.UUID | None = Field(default=None, foreign_key="recipe.id")
+    owner: User | None = Relationship(back_populates="daily_logs")
+    food: Food | None = Relationship()
+    recipe: Recipe | None = Relationship()
+
+
+# Properties to return via API, id is always required. Nutritional values and
+# cost are computed dynamically: from Food + quantity_g when entry_type is
+# "food", or from the Recipe's ingredients scaled by recipe_servings when
+# entry_type is "recipe".
+class DailyLogIngredientPublic(SQLModel):
+    food_id: uuid.UUID
+    food_name: str
+    quantity_g: float
+    energy_kcal: float | None = None
+    protein_g: float | None = None
+    carbohydrate_g: float | None = None
+    lipid_g: float | None = None
+    cost_brl: float | None = None
+
+
+class DailyLogPublic(SQLModel):
+    id: uuid.UUID
+    owner_id: uuid.UUID
+    entry_datetime: datetime
+    label: str | None = None
+    entry_type: EntryType
+    food_id: uuid.UUID | None = None
+    quantity_g: float | None = None
+    recipe_id: uuid.UUID | None = None
+    recipe_servings: float | None = None
+    food_name: str | None = None
+    recipe_name: str | None = None
+    energy_kcal: float
+    protein_g: float
+    carbohydrate_g: float
+    lipid_g: float
+    cost_brl: float
+    ingredients: list[DailyLogIngredientPublic] | None = None
+
+
+class DailyLogsPublic(SQLModel):
+    data: list[DailyLogPublic]
     count: int
 
 

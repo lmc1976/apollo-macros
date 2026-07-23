@@ -3,7 +3,7 @@ import { Trash2 } from "lucide-react"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 
-import { MealsService } from "@/client"
+import { FoodsService } from "@/client"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -19,25 +19,25 @@ import { LoadingButton } from "@/components/ui/loading-button"
 import useCustomToast from "@/hooks/useCustomToast"
 import { handleError } from "@/utils"
 
-interface DeleteMealProps {
+interface DeleteFoodProps {
   id: string
   onSuccess: () => void
 }
 
-const DeleteMeal = ({ id, onSuccess }: DeleteMealProps) => {
+const DeleteFood = ({ id, onSuccess }: DeleteFoodProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const { handleSubmit } = useForm()
 
-  const deleteMeal = async (id: string) => {
-    await MealsService.deleteMeal({ id: id })
+  const deleteFood = async (id: string) => {
+    await FoodsService.deleteFood({ id: id })
   }
 
   const mutation = useMutation({
-    mutationFn: deleteMeal,
+    mutationFn: deleteFood,
     onSuccess: () => {
-      showSuccessToast("A refeição foi excluída com sucesso")
+      showSuccessToast("O alimento foi excluído com sucesso")
       setIsOpen(false)
       onSuccess()
     },
@@ -59,15 +59,15 @@ const DeleteMeal = ({ id, onSuccess }: DeleteMealProps) => {
         onClick={() => setIsOpen(true)}
       >
         <Trash2 />
-        Delete Meal
+        Delete Food
       </DropdownMenuItem>
       <DialogContent className="sm:max-w-md">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>Delete Meal</DialogTitle>
+            <DialogTitle>Delete Food</DialogTitle>
             <DialogDescription>
-              Esta refeição e seus alimentos serão permanentemente excluídos.
-              Tem certeza? Essa ação não pode ser desfeita.
+              Este alimento será permanentemente excluído. Tem certeza? Essa
+              ação não pode ser desfeita.
             </DialogDescription>
           </DialogHeader>
 
@@ -91,4 +91,4 @@ const DeleteMeal = ({ id, onSuccess }: DeleteMealProps) => {
   )
 }
 
-export default DeleteMeal
+export default DeleteFood

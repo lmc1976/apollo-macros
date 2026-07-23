@@ -5,7 +5,7 @@ from sqlmodel import Session
 
 from app.core.config import settings
 from tests.utils.food import create_random_food
-from tests.utils.meal import create_random_meal
+from tests.utils.recipe import create_random_recipe
 from tests.utils.utils import random_lower_string
 
 
@@ -147,8 +147,8 @@ def test_delete_food_not_found(
 def test_delete_food_in_use(
     client: TestClient, superuser_token_headers: dict[str, str], db: Session
 ) -> None:
-    meal = create_random_meal(db)
-    food_id = meal.food_entries[0].food_id
+    recipe = create_random_recipe(db)
+    food_id = recipe.ingredients[0].food_id
     response = client.delete(
         f"{settings.API_V1_STR}/foods/{food_id}",
         headers=superuser_token_headers,

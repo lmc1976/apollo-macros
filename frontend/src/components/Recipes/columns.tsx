@@ -1,41 +1,26 @@
 import type { ColumnDef } from "@tanstack/react-table"
 
-import type { MealPublic } from "@/client"
-import { Badge } from "@/components/ui/badge"
-import { MealActionsMenu } from "./MealActionsMenu"
+import type { RecipePublic } from "@/client"
+import { RecipeActionsMenu } from "./RecipeActionsMenu"
 
 function formatNumber(value: number) {
   return value.toLocaleString(undefined, { maximumFractionDigits: 1 })
 }
 
-export const columns: ColumnDef<MealPublic>[] = [
+export const columns: ColumnDef<RecipePublic>[] = [
   {
-    accessorKey: "label",
-    header: "Refeição",
-    cell: ({ row }) => (
-      <div className="flex items-center gap-2">
-        <span className="font-medium">{row.original.label}</span>
-        {row.original.is_recipe && <Badge variant="secondary">Receita</Badge>}
-      </div>
-    ),
+    accessorKey: "name",
+    header: "Receita",
+    cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
   },
   {
-    accessorKey: "meal_datetime",
-    header: "Data/hora",
-    cell: ({ row }) => (
-      <span className="text-muted-foreground">
-        {row.original.meal_datetime
-          ? new Date(row.original.meal_datetime).toLocaleString()
-          : ""}
-      </span>
-    ),
-  },
-  {
-    id: "foods",
+    id: "ingredients",
     header: "Alimentos",
     cell: ({ row }) => (
       <span className="text-muted-foreground">
-        {row.original.food_entries.map((entry) => entry.food_name).join(", ")}
+        {row.original.ingredients
+          .map((ingredient) => ingredient.food_name)
+          .join(", ")}
       </span>
     ),
   },
@@ -72,7 +57,7 @@ export const columns: ColumnDef<MealPublic>[] = [
     header: () => <span className="sr-only">Actions</span>,
     cell: ({ row }) => (
       <div className="flex justify-end">
-        <MealActionsMenu meal={row.original} />
+        <RecipeActionsMenu recipe={row.original} />
       </div>
     ),
   },

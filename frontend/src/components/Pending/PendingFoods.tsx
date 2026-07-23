@@ -8,18 +8,18 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-const PendingMeals = () => (
+const PendingFoods = () => (
   <Table>
     <TableHeader>
       <TableRow>
-        <TableHead>Refeição</TableHead>
-        <TableHead>Data/hora</TableHead>
-        <TableHead>Alimentos</TableHead>
+        <TableHead>Nome</TableHead>
+        <TableHead>Grupo</TableHead>
+        <TableHead>Fonte</TableHead>
         <TableHead>Calorias</TableHead>
-        <TableHead>Proteína</TableHead>
-        <TableHead>Carboidrato</TableHead>
-        <TableHead>Gordura</TableHead>
-        <TableHead>Custo</TableHead>
+        <TableHead>Proteína (g)</TableHead>
+        <TableHead>Carboidrato (g)</TableHead>
+        <TableHead>Gordura (g)</TableHead>
+        <TableHead>Preço</TableHead>
         <TableHead>
           <span className="sr-only">Actions</span>
         </TableHead>
@@ -32,10 +32,7 @@ const PendingMeals = () => (
             <Skeleton className="h-4 w-32" />
           </TableCell>
           <TableCell>
-            <Skeleton className="h-4 w-32" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="h-4 w-48" />
+            <Skeleton className="h-4 w-24" />
           </TableCell>
           <TableCell>
             <Skeleton className="h-4 w-16" />
@@ -51,6 +48,9 @@ const PendingMeals = () => (
           </TableCell>
           <TableCell>
             <Skeleton className="h-4 w-16" />
+          </TableCell>
+          <TableCell>
+            <Skeleton className="h-4 w-20" />
           </TableCell>
           <TableCell>
             <div className="flex justify-end">
@@ -63,4 +63,4 @@ const PendingMeals = () => (
   </Table>
 )
 
-export default PendingMeals
+export default PendingFoods

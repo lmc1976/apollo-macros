@@ -6,13 +6,14 @@ from sqlmodel import func, select
 
 from app.api.deps import CurrentUser, SessionDep
 from app.models import (
+    DailyLog,
     Food,
     FoodCreate,
-    FoodEntry,
     FoodPublic,
     FoodsPublic,
     FoodUpdate,
     Message,
+    RecipeIngredient,
 )
 
 router = APIRouter(prefix="/foods", tags=["foods"])
@@ -92,18 +93,24 @@ def update_food(
 @router.delete("/{id}")
 def delete_food(session: SessionDep, _current_user: CurrentUser, id: uuid.UUID) -> Message:
     """
-    Delete a food, if it is not referenced by any meal.
+    Delete a food, if it is not referenced by any recipe ingredient or
+    daily log entry.
     """
     food = session.get(Food, id)
     if not food:
         raise HTTPException(status_code=404, detail="Food not found")
-    in_use = session.exec(
-        select(func.count()).select_from(FoodEntry).where(FoodEntry.food_id == id)
+    used_in_recipe = session.exec(
+        select(func.count())
+        .select_from(RecipeIngredient)
+        .where(RecipeIngredient.food_id == id)
     ).one()
-    if in_use:
+    used_in_daily_log = session.exec(
+        select(func.count()).select_from(DailyLog).where(DailyLog.food_id == id)
+    ).one()
+    if used_in_recipe or used_in_daily_log:
         raise HTTPException(
             status_code=400,
-            detail="Food is used by existing meal entries and cannot be deleted",
+            detail="Food is used by existing recipes or daily log entries and cannot be deleted",
         )
     session.delete(food)
     session.commit()

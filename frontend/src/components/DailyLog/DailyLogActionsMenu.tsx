@@ -1,21 +1,21 @@
 import { EllipsisVertical } from "lucide-react"
 import { useState } from "react"
 
-import type { MealPublic } from "@/client"
+import type { DailyLogPublic } from "@/client"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import DeleteMeal from "./DeleteMeal"
-import EditMeal from "./EditMeal"
+import DeleteDailyLog from "./DeleteDailyLog"
+import EditDailyLog from "./EditDailyLog"
 
-interface MealActionsMenuProps {
-  meal: MealPublic
+interface DailyLogActionsMenuProps {
+  entry: DailyLogPublic
 }
 
-export const MealActionsMenu = ({ meal }: MealActionsMenuProps) => {
+export const DailyLogActionsMenu = ({ entry }: DailyLogActionsMenuProps) => {
   const [open, setOpen] = useState(false)
 
   return (
@@ -26,8 +26,8 @@ export const MealActionsMenu = ({ meal }: MealActionsMenuProps) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <EditMeal meal={meal} onSuccess={() => setOpen(false)} />
-        <DeleteMeal id={meal.id} onSuccess={() => setOpen(false)} />
+        <EditDailyLog entry={entry} onSuccess={() => setOpen(false)} />
+        <DeleteDailyLog id={entry.id} onSuccess={() => setOpen(false)} />
       </DropdownMenuContent>
     </DropdownMenu>
   )

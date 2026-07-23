@@ -4,9 +4,8 @@ import { Plus } from "lucide-react"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 
-import { type MealCreate, MealsService } from "@/client"
+import { type RecipeCreate, RecipesService } from "@/client"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   Dialog,
   DialogClose,
@@ -28,51 +27,47 @@ import {
 import { Input } from "@/components/ui/input"
 import { LoadingButton } from "@/components/ui/loading-button"
 import useCustomToast from "@/hooks/useCustomToast"
-import { handleError, nowForDatetimeLocalInput } from "@/utils"
-import { FoodEntryFields } from "./FoodEntryFields"
-import { type MealFormData, mealFormSchema } from "./mealFormSchema"
+import { handleError } from "@/utils"
+import { RecipeIngredientFields } from "./RecipeIngredientFields"
+import { type RecipeFormData, recipeFormSchema } from "./recipeFormSchema"
 
-const emptyDefaultValues = (): MealFormData => ({
-  label: "",
-  meal_datetime: nowForDatetimeLocalInput(),
-  is_recipe: false,
-  food_entries: [{ food_id: "", food_name: "", quantity_g: 0 }],
+const emptyDefaultValues = (): RecipeFormData => ({
+  name: "",
+  ingredients: [{ food_id: "", food_name: "", quantity_g: 0 }],
 })
 
-const AddMeal = () => {
+const AddRecipe = () => {
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
   const { showSuccessToast, showErrorToast } = useCustomToast()
 
-  const form = useForm<MealFormData>({
-    resolver: zodResolver(mealFormSchema),
+  const form = useForm<RecipeFormData>({
+    resolver: zodResolver(recipeFormSchema),
     mode: "onBlur",
     criteriaMode: "all",
     defaultValues: emptyDefaultValues(),
   })
 
   const mutation = useMutation({
-    mutationFn: (data: MealCreate) =>
-      MealsService.createMeal({ requestBody: data }),
+    mutationFn: (data: RecipeCreate) =>
+      RecipesService.createRecipe({ requestBody: data }),
     onSuccess: () => {
-      showSuccessToast("Refeição criada com sucesso")
+      showSuccessToast("Receita criada com sucesso")
       form.reset(emptyDefaultValues())
       setIsOpen(false)
     },
     onError: handleError.bind(showErrorToast),
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["meals"] })
+      queryClient.invalidateQueries({ queryKey: ["recipes"] })
     },
   })
 
-  const onSubmit = (data: MealFormData) => {
+  const onSubmit = (data: RecipeFormData) => {
     mutation.mutate({
-      label: data.label,
-      meal_datetime: new Date(data.meal_datetime).toISOString(),
-      is_recipe: data.is_recipe,
-      food_entries: data.food_entries.map((entry) => ({
-        food_id: entry.food_id,
-        quantity_g: entry.quantity_g,
+      name: data.name,
+      ingredients: data.ingredients.map((ingredient) => ({
+        food_id: ingredient.food_id,
+        quantity_g: ingredient.quantity_g,
       })),
     })
   }
@@ -82,14 +77,14 @@ const AddMeal = () => {
       <DialogTrigger asChild>
         <Button className="my-4">
           <Plus className="mr-2" />
-          Add Meal
+          Add Recipe
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Add Meal</DialogTitle>
+          <DialogTitle>Add Recipe</DialogTitle>
           <DialogDescription>
-            Crie uma refeição e adicione os alimentos consumidos.
+            Crie um modelo reutilizável de receita com seus alimentos.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -97,7 +92,7 @@ const AddMeal = () => {
             <div className="grid gap-4 py-4">
               <FormField
                 control={form.control}
-                name="label"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
@@ -105,7 +100,7 @@ const AddMeal = () => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Ex: Almoço, Pré-treino..."
+                        placeholder="Ex: Omelete, Vitamina de banana..."
                         type="text"
                         {...field}
                       />
@@ -115,41 +110,7 @@ const AddMeal = () => {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="meal_datetime"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Data/hora <span className="text-destructive">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input type="datetime-local" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="is_recipe"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center gap-2">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      É uma receita reutilizável
-                    </FormLabel>
-                  </FormItem>
-                )}
-              />
-
-              <FoodEntryFields form={form} />
+              <RecipeIngredientFields form={form} />
             </div>
 
             <DialogFooter>
@@ -169,4 +130,4 @@ const AddMeal = () => {
   )
 }
 
-export default AddMeal
+export default AddRecipe

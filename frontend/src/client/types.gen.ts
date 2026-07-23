@@ -9,6 +9,64 @@ export type Body_login_login_access_token = {
     client_secret?: (string | null);
 };
 
+export type DailyLogCreate = {
+    entry_datetime?: string;
+    label?: (string | null);
+    entry_type: EntryType;
+    food_id?: (string | null);
+    quantity_g?: (number | null);
+    recipe_id?: (string | null);
+    recipe_servings?: (number | null);
+};
+
+export type DailyLogIngredientPublic = {
+    food_id: string;
+    food_name: string;
+    quantity_g: number;
+    energy_kcal?: (number | null);
+    protein_g?: (number | null);
+    carbohydrate_g?: (number | null);
+    lipid_g?: (number | null);
+    cost_brl?: (number | null);
+};
+
+export type DailyLogPublic = {
+    id: string;
+    owner_id: string;
+    entry_datetime: string;
+    label?: (string | null);
+    entry_type: EntryType;
+    food_id?: (string | null);
+    quantity_g?: (number | null);
+    recipe_id?: (string | null);
+    recipe_servings?: (number | null);
+    food_name?: (string | null);
+    recipe_name?: (string | null);
+    energy_kcal: number;
+    protein_g: number;
+    carbohydrate_g: number;
+    lipid_g: number;
+    cost_brl: number;
+    ingredients?: (Array<DailyLogIngredientPublic> | null);
+};
+
+export type DailyLogsPublic = {
+    data: Array<DailyLogPublic>;
+    count: number;
+};
+
+export type DailyLogUpdate = {
+    entry_datetime?: (string | null);
+    label?: (string | null);
+    entry_type?: (EntryType | null);
+    food_id?: (string | null);
+    quantity_g?: (number | null);
+    recipe_id?: (string | null);
+    recipe_servings?: (number | null);
+};
+
+export type EntryType = 'food' | 'recipe';
+
 export type FoodCreate = {
     name: string;
     food_group?: (string | null);
@@ -39,24 +97,6 @@ export type FoodCreate = {
     vitamin_c_mg?: (number | null);
     price_brl?: (number | null);
     price_reference_g?: (number | null);
-};
-
-export type FoodEntryCreate = {
-    food_id: string;
-    quantity_g: number;
-};
-
-export type FoodEntryPublic = {
-    id: string;
-    meal_id: string;
-    food_id: string;
-    food_name: string;
-    quantity_g: number;
-    energy_kcal?: (number | null);
-    protein_g?: (number | null);
-    carbohydrate_g?: (number | null);
-    lipid_g?: (number | null);
-    cost_brl?: (number | null);
 };
 
 export type FoodPublic = {
@@ -157,40 +197,6 @@ export type ItemUpdate = {
     description?: (string | null);
 };
 
-export type MealCreate = {
-    label: string;
-    meal_datetime?: string;
-    is_recipe?: boolean;
-    food_entries?: Array<FoodEntryCreate>;
-};
-
-export type MealPublic = {
-    label: string;
-    meal_datetime?: string;
-    is_recipe?: boolean;
-    id: string;
-    owner_id: string;
-    created_at?: (string | null);
-    food_entries: Array<FoodEntryPublic>;
-    total_energy_kcal: number;
-    total_protein_g: number;
-    total_carbohydrate_g: number;
-    total_lipid_g: number;
-    total_cost_brl: number;
-};
-
-export type MealsPublic = {
-    data: Array<MealPublic>;
-    count: number;
-};
-
-export type MealUpdate = {
-    label?: (string | null);
-    meal_datetime?: (string | null);
-    is_recipe?: (boolean | null);
-    food_entries?: (Array<FoodEntryCreate> | null);
-};
-
 export type Message = {
     message: string;
 };
@@ -205,6 +211,52 @@ export type PrivateUserCreate = {
     password: string;
     full_name: string;
     is_verified?: boolean;
+};
+
+export type RecipeCreate = {
+    name: string;
+    ingredients?: Array<RecipeIngredientCreate>;
+};
+
+export type RecipeIngredientCreate = {
+    food_id: string;
+    quantity_g: number;
+};
+
+export type RecipeIngredientPublic = {
+    id: string;
+    recipe_id: string;
+    food_id: string;
+    food_name: string;
+    quantity_g: number;
+    energy_kcal?: (number | null);
+    protein_g?: (number | null);
+    carbohydrate_g?: (number | null);
+    lipid_g?: (number | null);
+    cost_brl?: (number | null);
+};
+
+export type RecipePublic = {
+    name: string;
+    id: string;
+    owner_id: string;
+    created_at?: (string | null);
+    ingredients: Array<RecipeIngredientPublic>;
+    total_energy_kcal: number;
+    total_protein_g: number;
+    total_carbohydrate_g: number;
+    total_lipid_g: number;
+    total_cost_brl: number;
+};
+
+export type RecipesPublic = {
+    data: Array<RecipePublic>;
+    count: number;
+};
+
+export type RecipeUpdate = {
+    name?: (string | null);
+    ingredients?: (Array<RecipeIngredientCreate> | null);
 };
 
 export type Token = {
@@ -263,6 +315,38 @@ export type ValidationError = {
     msg: string;
     type: string;
 };
+
+export type DailyLogsReadDailyLogsData = {
+    limit?: number;
+    skip?: number;
+};
+
+export type DailyLogsReadDailyLogsResponse = (DailyLogsPublic);
+
+export type DailyLogsCreateDailyLogData = {
+    requestBody: DailyLogCreate;
+};
+
+export type DailyLogsCreateDailyLogResponse = (DailyLogPublic);
+
+export type DailyLogsReadDailyLogData = {
+    id: string;
+};
+
+export type DailyLogsReadDailyLogResponse = (DailyLogPublic);
+
+export type DailyLogsUpdateDailyLogData = {
+    id: string;
+    requestBody: DailyLogUpdate;
+};
+
+export type DailyLogsUpdateDailyLogResponse = (DailyLogPublic);
+
+export type DailyLogsDeleteDailyLogData = {
+    id: string;
+};
+
+export type DailyLogsDeleteDailyLogResponse = (Message);
 
 export type FoodsReadFoodsData = {
     limit?: number;
@@ -355,43 +439,44 @@ export type LoginRecoverPasswordHtmlContentData = {
 
 export type LoginRecoverPasswordHtmlContentResponse = (string);
 
-export type MealsReadMealsData = {
-    limit?: number;
-    skip?: number;
-};
-
-export type MealsReadMealsResponse = (MealsPublic);
-
-export type MealsCreateMealData = {
-    requestBody: MealCreate;
-};
-
-export type MealsCreateMealResponse = (MealPublic);
-
-export type MealsReadMealData = {
-    id: string;
-};
-
-export type MealsReadMealResponse = (MealPublic);
-
-export type MealsUpdateMealData = {
-    id: string;
-    requestBody: MealUpdate;
-};
-
-export type MealsUpdateMealResponse = (MealPublic);
-
-export type MealsDeleteMealData = {
-    id: string;
-};
-
-export type MealsDeleteMealResponse = (Message);
-
 export type PrivateCreateUserData = {
     requestBody: PrivateUserCreate;
 };
 
 export type PrivateCreateUserResponse = (UserPublic);
+
+export type RecipesReadRecipesData = {
+    limit?: number;
+    q?: (string | null);
+    skip?: number;
+};
+
+export type RecipesReadRecipesResponse = (RecipesPublic);
+
+export type RecipesCreateRecipeData = {
+    requestBody: RecipeCreate;
+};
+
+export type RecipesCreateRecipeResponse = (RecipePublic);
+
+export type RecipesReadRecipeData = {
+    id: string;
+};
+
+export type RecipesReadRecipeResponse = (RecipePublic);
+
+export type RecipesUpdateRecipeData = {
+    id: string;
+    requestBody: RecipeUpdate;
+};
+
+export type RecipesUpdateRecipeResponse = (RecipePublic);
+
+export type RecipesDeleteRecipeData = {
+    id: string;
+};
+
+export type RecipesDeleteRecipeResponse = (Message);
 
 export type UsersReadUsersData = {
     limit?: number;
