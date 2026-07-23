@@ -35,7 +35,7 @@ test.describe("Recipes management", () => {
     const name = randomRecipeName()
 
     await page.getByRole("button", { name: "Add Recipe" }).click()
-    await page.getByLabel("Nome", { exact: true }).fill(name)
+    await page.getByLabel("Nome").fill(name)
     await page.getByPlaceholder("Buscar alimento...").fill("Banana")
     await page.getByRole("button", { name: SEEDED_FOOD_NAME }).click()
     await page.getByPlaceholder("Qtd (g)").fill("120")
@@ -47,7 +47,7 @@ test.describe("Recipes management", () => {
 
   test("Cancel recipe creation", async ({ page }) => {
     await page.getByRole("button", { name: "Add Recipe" }).click()
-    await page.getByLabel("Nome", { exact: true }).fill("Test Recipe")
+    await page.getByLabel("Nome").fill("Test Recipe")
     await page.getByRole("button", { name: "Cancel" }).click()
 
     await expect(page.getByRole("dialog")).not.toBeVisible()
@@ -55,8 +55,8 @@ test.describe("Recipes management", () => {
 
   test("Recipe name is required", async ({ page }) => {
     await page.getByRole("button", { name: "Add Recipe" }).click()
-    await page.getByLabel("Nome", { exact: true }).fill("")
-    await page.getByLabel("Nome", { exact: true }).blur()
+    await page.getByLabel("Nome").fill("")
+    await page.getByLabel("Nome").blur()
 
     await expect(page.getByText("Nome da receita é obrigatório")).toBeVisible()
   })
@@ -68,7 +68,7 @@ test.describe("Recipes management", () => {
       name = randomRecipeName()
 
       await page.getByRole("button", { name: "Add Recipe" }).click()
-      await page.getByLabel("Nome", { exact: true }).fill(name)
+      await page.getByLabel("Nome").fill(name)
       await page.getByPlaceholder("Buscar alimento...").fill("Banana")
       await page.getByRole("button", { name: SEEDED_FOOD_NAME }).click()
       await page.getByPlaceholder("Qtd (g)").fill("120")
@@ -83,7 +83,7 @@ test.describe("Recipes management", () => {
       await page.getByRole("menuitem", { name: "Edit Recipe" }).click()
 
       const updatedName = randomRecipeName()
-      await page.getByLabel("Nome", { exact: true }).fill(updatedName)
+      await page.getByLabel("Nome").fill(updatedName)
       await page.getByRole("button", { name: "Save" }).click()
 
       await expect(

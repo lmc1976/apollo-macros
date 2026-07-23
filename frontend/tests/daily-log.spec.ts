@@ -58,7 +58,7 @@ test.describe("Daily Log management", () => {
 
     await page.goto("/recipes")
     await page.getByRole("button", { name: "Add Recipe" }).click()
-    await page.getByLabel("Nome", { exact: true }).fill(recipeName)
+    await page.getByLabel("Nome").fill(recipeName)
     await page.getByPlaceholder("Buscar alimento...").fill("Banana")
     await page.getByRole("button", { name: SEEDED_FOOD_NAME }).click()
     await page.getByPlaceholder("Qtd (g)").fill("100")

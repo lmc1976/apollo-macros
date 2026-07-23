@@ -32,7 +32,7 @@ test.describe("Foods management", () => {
     const name = randomFoodName()
 
     await page.getByRole("button", { name: "Add Food" }).click()
-    await page.getByLabel("Nome", { exact: true }).fill(name)
+    await page.getByLabel("Nome").fill(name)
     await page.getByLabel("Calorias (kcal)").fill("150")
     await page.getByLabel("Proteína (g)").fill("5")
     await page.getByRole("button", { name: "Save" }).click()
@@ -43,7 +43,7 @@ test.describe("Foods management", () => {
 
   test("Cancel food creation", async ({ page }) => {
     await page.getByRole("button", { name: "Add Food" }).click()
-    await page.getByLabel("Nome", { exact: true }).fill("Test Food")
+    await page.getByLabel("Nome").fill("Test Food")
     await page.getByRole("button", { name: "Cancel" }).click()
 
     await expect(page.getByRole("dialog")).not.toBeVisible()
@@ -51,8 +51,8 @@ test.describe("Foods management", () => {
 
   test("Name is required", async ({ page }) => {
     await page.getByRole("button", { name: "Add Food" }).click()
-    await page.getByLabel("Nome", { exact: true }).fill("")
-    await page.getByLabel("Nome", { exact: true }).blur()
+    await page.getByLabel("Nome").fill("")
+    await page.getByLabel("Nome").blur()
 
     await expect(page.getByText("Nome é obrigatório")).toBeVisible()
   })
@@ -64,7 +64,7 @@ test.describe("Foods management", () => {
       name = randomFoodName()
 
       await page.getByRole("button", { name: "Add Food" }).click()
-      await page.getByLabel("Nome", { exact: true }).fill(name)
+      await page.getByLabel("Nome").fill(name)
       await page.getByRole("button", { name: "Save" }).click()
       await expect(page.getByText("Alimento criado com sucesso")).toBeVisible()
       await expect(page.getByRole("dialog")).not.toBeVisible()
@@ -76,7 +76,7 @@ test.describe("Foods management", () => {
       await page.getByRole("menuitem", { name: "Edit Food" }).click()
 
       const updatedName = randomFoodName()
-      await page.getByLabel("Nome", { exact: true }).fill(updatedName)
+      await page.getByLabel("Nome").fill(updatedName)
       await page.getByRole("button", { name: "Save" }).click()
 
       await expect(
