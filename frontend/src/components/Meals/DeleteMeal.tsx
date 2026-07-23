@@ -3,7 +3,7 @@ import { Trash2 } from "lucide-react"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 
-import { FoodEntriesService } from "@/client"
+import { MealsService } from "@/client"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -19,25 +19,25 @@ import { LoadingButton } from "@/components/ui/loading-button"
 import useCustomToast from "@/hooks/useCustomToast"
 import { handleError } from "@/utils"
 
-interface DeleteFoodEntryProps {
+interface DeleteMealProps {
   id: string
   onSuccess: () => void
 }
 
-const DeleteFoodEntry = ({ id, onSuccess }: DeleteFoodEntryProps) => {
+const DeleteMeal = ({ id, onSuccess }: DeleteMealProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const { handleSubmit } = useForm()
 
-  const deleteFoodEntry = async (id: string) => {
-    await FoodEntriesService.deleteFoodEntry({ id: id })
+  const deleteMeal = async (id: string) => {
+    await MealsService.deleteMeal({ id: id })
   }
 
   const mutation = useMutation({
-    mutationFn: deleteFoodEntry,
+    mutationFn: deleteMeal,
     onSuccess: () => {
-      showSuccessToast("The food entry was deleted successfully")
+      showSuccessToast("A refeição foi excluída com sucesso")
       setIsOpen(false)
       onSuccess()
     },
@@ -59,15 +59,15 @@ const DeleteFoodEntry = ({ id, onSuccess }: DeleteFoodEntryProps) => {
         onClick={() => setIsOpen(true)}
       >
         <Trash2 />
-        Delete Food Entry
+        Delete Meal
       </DropdownMenuItem>
       <DialogContent className="sm:max-w-md">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>Delete Food Entry</DialogTitle>
+            <DialogTitle>Delete Meal</DialogTitle>
             <DialogDescription>
-              This food entry will be permanently deleted. Are you sure? You
-              will not be able to undo this action.
+              Esta refeição e seus alimentos serão permanentemente excluídos.
+              Tem certeza? Essa ação não pode ser desfeita.
             </DialogDescription>
           </DialogHeader>
 
@@ -91,4 +91,4 @@ const DeleteFoodEntry = ({ id, onSuccess }: DeleteFoodEntryProps) => {
   )
 }
 
-export default DeleteFoodEntry
+export default DeleteMeal

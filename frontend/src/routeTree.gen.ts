@@ -16,8 +16,8 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 import { Route as LayoutAdminRouteImport } from './routes/_layout/admin'
-import { Route as LayoutFoodEntriesRouteImport } from './routes/_layout/food-entries'
 import { Route as LayoutItemsRouteImport } from './routes/_layout/items'
+import { Route as LayoutMealsRouteImport } from './routes/_layout/meals'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
 
 const LayoutRoute = LayoutRouteImport.update({
@@ -54,14 +54,14 @@ const LayoutAdminRoute = LayoutAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => LayoutRoute,
 } as any)
-const LayoutFoodEntriesRoute = LayoutFoodEntriesRouteImport.update({
-  id: '/food-entries',
-  path: '/food-entries',
-  getParentRoute: () => LayoutRoute,
-} as any)
 const LayoutItemsRoute = LayoutItemsRouteImport.update({
   id: '/items',
   path: '/items',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutMealsRoute = LayoutMealsRouteImport.update({
+  id: '/meals',
+  path: '/meals',
   getParentRoute: () => LayoutRoute,
 } as any)
 const LayoutSettingsRoute = LayoutSettingsRouteImport.update({
@@ -77,8 +77,8 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/admin': typeof LayoutAdminRoute
-  '/food-entries': typeof LayoutFoodEntriesRoute
   '/items': typeof LayoutItemsRoute
+  '/meals': typeof LayoutMealsRoute
   '/settings': typeof LayoutSettingsRoute
 }
 export interface FileRoutesByTo {
@@ -87,8 +87,8 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/admin': typeof LayoutAdminRoute
-  '/food-entries': typeof LayoutFoodEntriesRoute
   '/items': typeof LayoutItemsRoute
+  '/meals': typeof LayoutMealsRoute
   '/settings': typeof LayoutSettingsRoute
   '/': typeof LayoutIndexRoute
 }
@@ -100,8 +100,8 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/_layout/admin': typeof LayoutAdminRoute
-  '/_layout/food-entries': typeof LayoutFoodEntriesRoute
   '/_layout/items': typeof LayoutItemsRoute
+  '/_layout/meals': typeof LayoutMealsRoute
   '/_layout/settings': typeof LayoutSettingsRoute
   '/_layout/': typeof LayoutIndexRoute
 }
@@ -114,8 +114,8 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/admin'
-    | '/food-entries'
     | '/items'
+    | '/meals'
     | '/settings'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -124,8 +124,8 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/admin'
-    | '/food-entries'
     | '/items'
+    | '/meals'
     | '/settings'
     | '/'
   id:
@@ -136,8 +136,8 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/_layout/admin'
-    | '/_layout/food-entries'
     | '/_layout/items'
+    | '/_layout/meals'
     | '/_layout/settings'
     | '/_layout/'
   fileRoutesById: FileRoutesById
@@ -201,18 +201,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAdminRouteImport
       parentRoute: typeof LayoutRoute
     }
-    '/_layout/food-entries': {
-      id: '/_layout/food-entries'
-      path: '/food-entries'
-      fullPath: '/food-entries'
-      preLoaderRoute: typeof LayoutFoodEntriesRouteImport
-      parentRoute: typeof LayoutRoute
-    }
     '/_layout/items': {
       id: '/_layout/items'
       path: '/items'
       fullPath: '/items'
       preLoaderRoute: typeof LayoutItemsRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/meals': {
+      id: '/_layout/meals'
+      path: '/meals'
+      fullPath: '/meals'
+      preLoaderRoute: typeof LayoutMealsRouteImport
       parentRoute: typeof LayoutRoute
     }
     '/_layout/settings': {
@@ -227,16 +227,16 @@ declare module '@tanstack/react-router' {
 
 interface LayoutRouteChildren {
   LayoutAdminRoute: typeof LayoutAdminRoute
-  LayoutFoodEntriesRoute: typeof LayoutFoodEntriesRoute
   LayoutItemsRoute: typeof LayoutItemsRoute
+  LayoutMealsRoute: typeof LayoutMealsRoute
   LayoutSettingsRoute: typeof LayoutSettingsRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutAdminRoute: LayoutAdminRoute,
-  LayoutFoodEntriesRoute: LayoutFoodEntriesRoute,
   LayoutItemsRoute: LayoutItemsRoute,
+  LayoutMealsRoute: LayoutMealsRoute,
   LayoutSettingsRoute: LayoutSettingsRoute,
   LayoutIndexRoute: LayoutIndexRoute,
 }

@@ -9,42 +9,125 @@ export type Body_login_login_access_token = {
     client_secret?: (string | null);
 };
 
-export type FoodEntriesPublic = {
-    data: Array<FoodEntryPublic>;
-    count: number;
+export type FoodCreate = {
+    name: string;
+    food_group?: (string | null);
+    source?: (string | null);
+    energy_kcal?: (number | null);
+    protein_g?: (number | null);
+    carbohydrate_g?: (number | null);
+    lipid_g?: (number | null);
+    saturated_fat_g?: (number | null);
+    monounsaturated_fat_g?: (number | null);
+    polyunsaturated_fat_g?: (number | null);
+    cholesterol_mg?: (number | null);
+    fiber_g?: (number | null);
+    sodium_mg?: (number | null);
+    calcium_mg?: (number | null);
+    magnesium_mg?: (number | null);
+    phosphorus_mg?: (number | null);
+    iron_mg?: (number | null);
+    potassium_mg?: (number | null);
+    copper_mg?: (number | null);
+    zinc_mg?: (number | null);
+    manganese_mg?: (number | null);
+    retinol_mcg?: (number | null);
+    thiamine_mg?: (number | null);
+    riboflavin_mg?: (number | null);
+    pyridoxine_mg?: (number | null);
+    niacin_mg?: (number | null);
+    vitamin_c_mg?: (number | null);
+    price_brl?: (number | null);
+    price_reference_g?: (number | null);
 };
 
 export type FoodEntryCreate = {
-    food_name: string;
+    food_id: string;
     quantity_g: number;
-    calories: number;
-    protein_g: number;
-    carbs_g: number;
-    fat_g: number;
-    entry_datetime?: string;
 };
 
 export type FoodEntryPublic = {
+    id: string;
+    meal_id: string;
+    food_id: string;
     food_name: string;
     quantity_g: number;
-    calories: number;
-    protein_g: number;
-    carbs_g: number;
-    fat_g: number;
-    entry_datetime?: string;
+    energy_kcal?: (number | null);
+    protein_g?: (number | null);
+    carbohydrate_g?: (number | null);
+    lipid_g?: (number | null);
+    cost_brl?: (number | null);
+};
+
+export type FoodPublic = {
+    name: string;
+    food_group?: (string | null);
+    source?: (string | null);
+    energy_kcal?: (number | null);
+    protein_g?: (number | null);
+    carbohydrate_g?: (number | null);
+    lipid_g?: (number | null);
+    saturated_fat_g?: (number | null);
+    monounsaturated_fat_g?: (number | null);
+    polyunsaturated_fat_g?: (number | null);
+    cholesterol_mg?: (number | null);
+    fiber_g?: (number | null);
+    sodium_mg?: (number | null);
+    calcium_mg?: (number | null);
+    magnesium_mg?: (number | null);
+    phosphorus_mg?: (number | null);
+    iron_mg?: (number | null);
+    potassium_mg?: (number | null);
+    copper_mg?: (number | null);
+    zinc_mg?: (number | null);
+    manganese_mg?: (number | null);
+    retinol_mcg?: (number | null);
+    thiamine_mg?: (number | null);
+    riboflavin_mg?: (number | null);
+    pyridoxine_mg?: (number | null);
+    niacin_mg?: (number | null);
+    vitamin_c_mg?: (number | null);
+    price_brl?: (number | null);
+    price_reference_g?: (number | null);
     id: string;
-    owner_id: string;
     created_at?: (string | null);
 };
 
-export type FoodEntryUpdate = {
-    food_name?: (string | null);
-    quantity_g?: (number | null);
-    calories?: (number | null);
+export type FoodsPublic = {
+    data: Array<FoodPublic>;
+    count: number;
+};
+
+export type FoodUpdate = {
+    name?: (string | null);
+    food_group?: (string | null);
+    source?: (string | null);
+    energy_kcal?: (number | null);
     protein_g?: (number | null);
-    carbs_g?: (number | null);
-    fat_g?: (number | null);
-    entry_datetime?: (string | null);
+    carbohydrate_g?: (number | null);
+    lipid_g?: (number | null);
+    saturated_fat_g?: (number | null);
+    monounsaturated_fat_g?: (number | null);
+    polyunsaturated_fat_g?: (number | null);
+    cholesterol_mg?: (number | null);
+    fiber_g?: (number | null);
+    sodium_mg?: (number | null);
+    calcium_mg?: (number | null);
+    magnesium_mg?: (number | null);
+    phosphorus_mg?: (number | null);
+    iron_mg?: (number | null);
+    potassium_mg?: (number | null);
+    copper_mg?: (number | null);
+    zinc_mg?: (number | null);
+    manganese_mg?: (number | null);
+    retinol_mcg?: (number | null);
+    thiamine_mg?: (number | null);
+    riboflavin_mg?: (number | null);
+    pyridoxine_mg?: (number | null);
+    niacin_mg?: (number | null);
+    vitamin_c_mg?: (number | null);
+    price_brl?: (number | null);
+    price_reference_g?: (number | null);
 };
 
 export type HTTPValidationError = {
@@ -72,6 +155,40 @@ export type ItemsPublic = {
 export type ItemUpdate = {
     title?: (string | null);
     description?: (string | null);
+};
+
+export type MealCreate = {
+    label: string;
+    meal_datetime?: string;
+    is_recipe?: boolean;
+    food_entries?: Array<FoodEntryCreate>;
+};
+
+export type MealPublic = {
+    label: string;
+    meal_datetime?: string;
+    is_recipe?: boolean;
+    id: string;
+    owner_id: string;
+    created_at?: (string | null);
+    food_entries: Array<FoodEntryPublic>;
+    total_energy_kcal: number;
+    total_protein_g: number;
+    total_carbohydrate_g: number;
+    total_lipid_g: number;
+    total_cost_brl: number;
+};
+
+export type MealsPublic = {
+    data: Array<MealPublic>;
+    count: number;
+};
+
+export type MealUpdate = {
+    label?: (string | null);
+    meal_datetime?: (string | null);
+    is_recipe?: (boolean | null);
+    food_entries?: (Array<FoodEntryCreate> | null);
 };
 
 export type Message = {
@@ -147,37 +264,38 @@ export type ValidationError = {
     type: string;
 };
 
-export type FoodEntriesReadFoodEntriesData = {
+export type FoodsReadFoodsData = {
     limit?: number;
+    q?: (string | null);
     skip?: number;
 };
 
-export type FoodEntriesReadFoodEntriesResponse = (FoodEntriesPublic);
+export type FoodsReadFoodsResponse = (FoodsPublic);
 
-export type FoodEntriesCreateFoodEntryData = {
-    requestBody: FoodEntryCreate;
+export type FoodsCreateFoodData = {
+    requestBody: FoodCreate;
 };
 
-export type FoodEntriesCreateFoodEntryResponse = (FoodEntryPublic);
+export type FoodsCreateFoodResponse = (FoodPublic);
 
-export type FoodEntriesReadFoodEntryData = {
+export type FoodsReadFoodData = {
     id: string;
 };
 
-export type FoodEntriesReadFoodEntryResponse = (FoodEntryPublic);
+export type FoodsReadFoodResponse = (FoodPublic);
 
-export type FoodEntriesUpdateFoodEntryData = {
+export type FoodsUpdateFoodData = {
     id: string;
-    requestBody: FoodEntryUpdate;
+    requestBody: FoodUpdate;
 };
 
-export type FoodEntriesUpdateFoodEntryResponse = (FoodEntryPublic);
+export type FoodsUpdateFoodResponse = (FoodPublic);
 
-export type FoodEntriesDeleteFoodEntryData = {
+export type FoodsDeleteFoodData = {
     id: string;
 };
 
-export type FoodEntriesDeleteFoodEntryResponse = (Message);
+export type FoodsDeleteFoodResponse = (Message);
 
 export type ItemsReadItemsData = {
     limit?: number;
@@ -236,6 +354,38 @@ export type LoginRecoverPasswordHtmlContentData = {
 };
 
 export type LoginRecoverPasswordHtmlContentResponse = (string);
+
+export type MealsReadMealsData = {
+    limit?: number;
+    skip?: number;
+};
+
+export type MealsReadMealsResponse = (MealsPublic);
+
+export type MealsCreateMealData = {
+    requestBody: MealCreate;
+};
+
+export type MealsCreateMealResponse = (MealPublic);
+
+export type MealsReadMealData = {
+    id: string;
+};
+
+export type MealsReadMealResponse = (MealPublic);
+
+export type MealsUpdateMealData = {
+    id: string;
+    requestBody: MealUpdate;
+};
+
+export type MealsUpdateMealResponse = (MealPublic);
+
+export type MealsDeleteMealData = {
+    id: string;
+};
+
+export type MealsDeleteMealResponse = (Message);
 
 export type PrivateCreateUserData = {
     requestBody: PrivateUserCreate;

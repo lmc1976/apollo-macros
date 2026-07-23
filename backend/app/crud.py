@@ -5,10 +5,14 @@ from sqlmodel import Session, select
 
 from app.core.security import get_password_hash, verify_password
 from app.models import (
+    Food,
+    FoodCreate,
     FoodEntry,
     FoodEntryCreate,
     Item,
     ItemCreate,
+    Meal,
+    MealCreate,
     User,
     UserCreate,
     UserUpdate,
@@ -76,13 +80,33 @@ def create_item(*, session: Session, item_in: ItemCreate, owner_id: uuid.UUID) -
     return db_item
 
 
-def create_food_entry(
-    *, session: Session, food_entry_in: FoodEntryCreate, owner_id: uuid.UUID
-) -> FoodEntry:
-    db_food_entry = FoodEntry.model_validate(
-        food_entry_in, update={"owner_id": owner_id}
-    )
-    session.add(db_food_entry)
+def create_food(*, session: Session, food_in: FoodCreate) -> Food:
+    db_food = Food.model_validate(food_in)
+    session.add(db_food)
     session.commit()
-    session.refresh(db_food_entry)
-    return db_food_entry
+    session.refresh(db_food)
+    return db_food
+
+
+def create_meal(*, session: Session, meal_in: MealCreate, owner_id: uuid.UUID) -> Meal:
+    meal_data = meal_in.model_dump(exclude={"food_entries"})
+    db_meal = Meal.model_validate(meal_data, update={"owner_id": owner_id})
+    session.add(db_meal)
+    session.flush()
+    for entry_in in meal_in.food_entries:
+        db_entry = FoodEntry.model_validate(entry_in, update={"meal_id": db_meal.id})
+        session.add(db_entry)
+    session.commit()
+    session.refresh(db_meal)
+    return db_meal
+
+
+def replace_meal_food_entries(
+    *, session: Session, meal: Meal, food_entries_in: list[FoodEntryCreate]
+) -> None:
+    for entry in list(meal.food_entries):
+        session.delete(entry)
+    session.flush()
+    for entry_in in food_entries_in:
+        db_entry = FoodEntry.model_validate(entry_in, update={"meal_id": meal.id})
+        session.add(db_entry)

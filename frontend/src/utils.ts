@@ -29,3 +29,15 @@ export const getInitials = (name: string): string => {
     .join("")
     .toUpperCase()
 }
+
+export const nowForDatetimeLocalInput = (): string => {
+  const now = new Date()
+  const tzOffsetMs = now.getTimezoneOffset() * 60000
+  return new Date(now.getTime() - tzOffsetMs).toISOString().slice(0, 16)
+}
+
+export const toDatetimeLocalInputValue = (isoString: string): string => {
+  const date = new Date(isoString)
+  const tzOffsetMs = date.getTimezoneOffset() * 60000
+  return new Date(date.getTime() - tzOffsetMs).toISOString().slice(0, 16)
+}

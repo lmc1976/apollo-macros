@@ -3,23 +3,25 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { FoodEntriesReadFoodEntriesData, FoodEntriesReadFoodEntriesResponse, FoodEntriesCreateFoodEntryData, FoodEntriesCreateFoodEntryResponse, FoodEntriesReadFoodEntryData, FoodEntriesReadFoodEntryResponse, FoodEntriesUpdateFoodEntryData, FoodEntriesUpdateFoodEntryResponse, FoodEntriesDeleteFoodEntryData, FoodEntriesDeleteFoodEntryResponse, ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemData, ItemsCreateItemResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemData, ItemsUpdateItemResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+import type { FoodsReadFoodsData, FoodsReadFoodsResponse, FoodsCreateFoodData, FoodsCreateFoodResponse, FoodsReadFoodData, FoodsReadFoodResponse, FoodsUpdateFoodData, FoodsUpdateFoodResponse, FoodsDeleteFoodData, FoodsDeleteFoodResponse, ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemData, ItemsCreateItemResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemData, ItemsUpdateItemResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, MealsReadMealsData, MealsReadMealsResponse, MealsCreateMealData, MealsCreateMealResponse, MealsReadMealData, MealsReadMealResponse, MealsUpdateMealData, MealsUpdateMealResponse, MealsDeleteMealData, MealsDeleteMealResponse, PrivateCreateUserData, PrivateCreateUserResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
 
-export class FoodEntriesService {
+export class FoodsService {
     /**
-     * Read Food Entries
-     * Retrieve food entries.
+     * Read Foods
+     * Retrieve foods from the shared catalog, optionally searching by name.
      * @param data The data for the request.
+     * @param data.q
      * @param data.skip
      * @param data.limit
-     * @returns FoodEntriesPublic Successful Response
+     * @returns FoodsPublic Successful Response
      * @throws ApiError
      */
-    public static readFoodEntries(data: FoodEntriesReadFoodEntriesData = {}): CancelablePromise<FoodEntriesReadFoodEntriesResponse> {
+    public static readFoods(data: FoodsReadFoodsData = {}): CancelablePromise<FoodsReadFoodsResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/food-entries/',
+            url: '/api/v1/foods/',
             query: {
+                q: data.q,
                 skip: data.skip,
                 limit: data.limit
             },
@@ -30,17 +32,17 @@ export class FoodEntriesService {
     }
     
     /**
-     * Create Food Entry
-     * Create new food entry.
+     * Create Food
+     * Create new food in the shared catalog.
      * @param data The data for the request.
      * @param data.requestBody
-     * @returns FoodEntryPublic Successful Response
+     * @returns FoodPublic Successful Response
      * @throws ApiError
      */
-    public static createFoodEntry(data: FoodEntriesCreateFoodEntryData): CancelablePromise<FoodEntriesCreateFoodEntryResponse> {
+    public static createFood(data: FoodsCreateFoodData): CancelablePromise<FoodsCreateFoodResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/v1/food-entries/',
+            url: '/api/v1/foods/',
             body: data.requestBody,
             mediaType: 'application/json',
             errors: {
@@ -50,17 +52,17 @@ export class FoodEntriesService {
     }
     
     /**
-     * Read Food Entry
-     * Get food entry by ID.
+     * Read Food
+     * Get food by ID.
      * @param data The data for the request.
      * @param data.id
-     * @returns FoodEntryPublic Successful Response
+     * @returns FoodPublic Successful Response
      * @throws ApiError
      */
-    public static readFoodEntry(data: FoodEntriesReadFoodEntryData): CancelablePromise<FoodEntriesReadFoodEntryResponse> {
+    public static readFood(data: FoodsReadFoodData): CancelablePromise<FoodsReadFoodResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/food-entries/{id}',
+            url: '/api/v1/foods/{id}',
             path: {
                 id: data.id
             },
@@ -71,18 +73,18 @@ export class FoodEntriesService {
     }
     
     /**
-     * Update Food Entry
-     * Update a food entry.
+     * Update Food
+     * Update a food.
      * @param data The data for the request.
      * @param data.id
      * @param data.requestBody
-     * @returns FoodEntryPublic Successful Response
+     * @returns FoodPublic Successful Response
      * @throws ApiError
      */
-    public static updateFoodEntry(data: FoodEntriesUpdateFoodEntryData): CancelablePromise<FoodEntriesUpdateFoodEntryResponse> {
+    public static updateFood(data: FoodsUpdateFoodData): CancelablePromise<FoodsUpdateFoodResponse> {
         return __request(OpenAPI, {
             method: 'PUT',
-            url: '/api/v1/food-entries/{id}',
+            url: '/api/v1/foods/{id}',
             path: {
                 id: data.id
             },
@@ -95,17 +97,17 @@ export class FoodEntriesService {
     }
     
     /**
-     * Delete Food Entry
-     * Delete a food entry.
+     * Delete Food
+     * Delete a food, if it is not referenced by any meal.
      * @param data The data for the request.
      * @param data.id
      * @returns Message Successful Response
      * @throws ApiError
      */
-    public static deleteFoodEntry(data: FoodEntriesDeleteFoodEntryData): CancelablePromise<FoodEntriesDeleteFoodEntryResponse> {
+    public static deleteFood(data: FoodsDeleteFoodData): CancelablePromise<FoodsDeleteFoodResponse> {
         return __request(OpenAPI, {
             method: 'DELETE',
-            url: '/api/v1/food-entries/{id}',
+            url: '/api/v1/foods/{id}',
             path: {
                 id: data.id
             },
@@ -316,6 +318,117 @@ export class LoginService {
             url: '/api/v1/password-recovery-html-content/{email}',
             path: {
                 email: data.email
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
+
+export class MealsService {
+    /**
+     * Read Meals
+     * Retrieve meals, with computed macro and cost totals.
+     * @param data The data for the request.
+     * @param data.skip
+     * @param data.limit
+     * @returns MealsPublic Successful Response
+     * @throws ApiError
+     */
+    public static readMeals(data: MealsReadMealsData = {}): CancelablePromise<MealsReadMealsResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/meals/',
+            query: {
+                skip: data.skip,
+                limit: data.limit
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Create Meal
+     * Create a new meal, with its food entries.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns MealPublic Successful Response
+     * @throws ApiError
+     */
+    public static createMeal(data: MealsCreateMealData): CancelablePromise<MealsCreateMealResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/meals/',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Read Meal
+     * Get meal by ID, with computed macro and cost totals.
+     * @param data The data for the request.
+     * @param data.id
+     * @returns MealPublic Successful Response
+     * @throws ApiError
+     */
+    public static readMeal(data: MealsReadMealData): CancelablePromise<MealsReadMealResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/meals/{id}',
+            path: {
+                id: data.id
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Update Meal
+     * Update a meal. If food_entries is provided, it replaces all existing entries.
+     * @param data The data for the request.
+     * @param data.id
+     * @param data.requestBody
+     * @returns MealPublic Successful Response
+     * @throws ApiError
+     */
+    public static updateMeal(data: MealsUpdateMealData): CancelablePromise<MealsUpdateMealResponse> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/v1/meals/{id}',
+            path: {
+                id: data.id
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Delete Meal
+     * Delete a meal and its food entries.
+     * @param data The data for the request.
+     * @param data.id
+     * @returns Message Successful Response
+     * @throws ApiError
+     */
+    public static deleteMeal(data: MealsDeleteMealData): CancelablePromise<MealsDeleteMealResponse> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/v1/meals/{id}',
+            path: {
+                id: data.id
             },
             errors: {
                 422: 'Validation Error'

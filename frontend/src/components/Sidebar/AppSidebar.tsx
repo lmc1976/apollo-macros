@@ -14,7 +14,7 @@ import { User } from "./User"
 
 const baseItems: Item[] = [
   { icon: Home, title: "Dashboard", path: "/" },
-  { icon: Salad, title: "Food Entries", path: "/food-entries" },
+  { icon: Salad, title: "Meals", path: "/meals" },
   { icon: Briefcase, title: "Items", path: "/items" },
 ]
 

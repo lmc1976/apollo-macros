@@ -57,116 +57,808 @@ export const Body_login_login_access_tokenSchema = {
     title: 'Body_login-login_access_token'
 } as const;
 
-export const FoodEntriesPublicSchema = {
+export const FoodCreateSchema = {
     properties: {
-        data: {
-            items: {
-                '$ref': '#/components/schemas/FoodEntryPublic'
-            },
-            type: 'array',
-            title: 'Data'
+        name: {
+            type: 'string',
+            maxLength: 255,
+            minLength: 1,
+            title: 'Name'
         },
-        count: {
-            type: 'integer',
-            title: 'Count'
+        food_group: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Food Group'
+        },
+        source: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Source'
+        },
+        energy_kcal: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Energy Kcal'
+        },
+        protein_g: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Protein G'
+        },
+        carbohydrate_g: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Carbohydrate G'
+        },
+        lipid_g: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Lipid G'
+        },
+        saturated_fat_g: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Saturated Fat G'
+        },
+        monounsaturated_fat_g: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Monounsaturated Fat G'
+        },
+        polyunsaturated_fat_g: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Polyunsaturated Fat G'
+        },
+        cholesterol_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Cholesterol Mg'
+        },
+        fiber_g: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Fiber G'
+        },
+        sodium_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Sodium Mg'
+        },
+        calcium_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Calcium Mg'
+        },
+        magnesium_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Magnesium Mg'
+        },
+        phosphorus_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Phosphorus Mg'
+        },
+        iron_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Iron Mg'
+        },
+        potassium_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Potassium Mg'
+        },
+        copper_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Copper Mg'
+        },
+        zinc_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Zinc Mg'
+        },
+        manganese_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Manganese Mg'
+        },
+        retinol_mcg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Retinol Mcg'
+        },
+        thiamine_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Thiamine Mg'
+        },
+        riboflavin_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Riboflavin Mg'
+        },
+        pyridoxine_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Pyridoxine Mg'
+        },
+        niacin_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Niacin Mg'
+        },
+        vitamin_c_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Vitamin C Mg'
+        },
+        price_brl: {
+            anyOf: [
+                {
+                    type: 'number',
+                    exclusiveMinimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Price Brl'
+        },
+        price_reference_g: {
+            anyOf: [
+                {
+                    type: 'number',
+                    exclusiveMinimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Price Reference G'
         }
     },
     type: 'object',
-    required: ['data', 'count'],
-    title: 'FoodEntriesPublic'
+    required: ['name'],
+    title: 'FoodCreate'
 } as const;
 
 export const FoodEntryCreateSchema = {
     properties: {
-        food_name: {
+        food_id: {
             type: 'string',
-            maxLength: 255,
-            minLength: 1,
-            title: 'Food Name'
+            format: 'uuid',
+            title: 'Food Id'
         },
         quantity_g: {
             type: 'number',
             exclusiveMinimum: 0,
             title: 'Quantity G'
-        },
-        calories: {
-            type: 'number',
-            minimum: 0,
-            title: 'Calories'
-        },
-        protein_g: {
-            type: 'number',
-            minimum: 0,
-            title: 'Protein G'
-        },
-        carbs_g: {
-            type: 'number',
-            minimum: 0,
-            title: 'Carbs G'
-        },
-        fat_g: {
-            type: 'number',
-            minimum: 0,
-            title: 'Fat G'
-        },
-        entry_datetime: {
-            type: 'string',
-            format: 'date-time',
-            title: 'Entry Datetime'
         }
     },
     type: 'object',
-    required: ['food_name', 'quantity_g', 'calories', 'protein_g', 'carbs_g', 'fat_g'],
+    required: ['food_id', 'quantity_g'],
     title: 'FoodEntryCreate'
 } as const;
 
 export const FoodEntryPublicSchema = {
     properties: {
-        food_name: {
-            type: 'string',
-            maxLength: 255,
-            minLength: 1,
-            title: 'Food Name'
-        },
-        quantity_g: {
-            type: 'number',
-            exclusiveMinimum: 0,
-            title: 'Quantity G'
-        },
-        calories: {
-            type: 'number',
-            minimum: 0,
-            title: 'Calories'
-        },
-        protein_g: {
-            type: 'number',
-            minimum: 0,
-            title: 'Protein G'
-        },
-        carbs_g: {
-            type: 'number',
-            minimum: 0,
-            title: 'Carbs G'
-        },
-        fat_g: {
-            type: 'number',
-            minimum: 0,
-            title: 'Fat G'
-        },
-        entry_datetime: {
-            type: 'string',
-            format: 'date-time',
-            title: 'Entry Datetime'
-        },
         id: {
             type: 'string',
             format: 'uuid',
             title: 'Id'
         },
-        owner_id: {
+        meal_id: {
             type: 'string',
             format: 'uuid',
-            title: 'Owner Id'
+            title: 'Meal Id'
+        },
+        food_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Food Id'
+        },
+        food_name: {
+            type: 'string',
+            title: 'Food Name'
+        },
+        quantity_g: {
+            type: 'number',
+            title: 'Quantity G'
+        },
+        energy_kcal: {
+            anyOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Energy Kcal'
+        },
+        protein_g: {
+            anyOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Protein G'
+        },
+        carbohydrate_g: {
+            anyOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Carbohydrate G'
+        },
+        lipid_g: {
+            anyOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Lipid G'
+        },
+        cost_brl: {
+            anyOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Cost Brl'
+        }
+    },
+    type: 'object',
+    required: ['id', 'meal_id', 'food_id', 'food_name', 'quantity_g'],
+    title: 'FoodEntryPublic'
+} as const;
+
+export const FoodPublicSchema = {
+    properties: {
+        name: {
+            type: 'string',
+            maxLength: 255,
+            minLength: 1,
+            title: 'Name'
+        },
+        food_group: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Food Group'
+        },
+        source: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Source'
+        },
+        energy_kcal: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Energy Kcal'
+        },
+        protein_g: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Protein G'
+        },
+        carbohydrate_g: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Carbohydrate G'
+        },
+        lipid_g: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Lipid G'
+        },
+        saturated_fat_g: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Saturated Fat G'
+        },
+        monounsaturated_fat_g: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Monounsaturated Fat G'
+        },
+        polyunsaturated_fat_g: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Polyunsaturated Fat G'
+        },
+        cholesterol_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Cholesterol Mg'
+        },
+        fiber_g: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Fiber G'
+        },
+        sodium_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Sodium Mg'
+        },
+        calcium_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Calcium Mg'
+        },
+        magnesium_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Magnesium Mg'
+        },
+        phosphorus_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Phosphorus Mg'
+        },
+        iron_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Iron Mg'
+        },
+        potassium_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Potassium Mg'
+        },
+        copper_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Copper Mg'
+        },
+        zinc_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Zinc Mg'
+        },
+        manganese_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Manganese Mg'
+        },
+        retinol_mcg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Retinol Mcg'
+        },
+        thiamine_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Thiamine Mg'
+        },
+        riboflavin_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Riboflavin Mg'
+        },
+        pyridoxine_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Pyridoxine Mg'
+        },
+        niacin_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Niacin Mg'
+        },
+        vitamin_c_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Vitamin C Mg'
+        },
+        price_brl: {
+            anyOf: [
+                {
+                    type: 'number',
+                    exclusiveMinimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Price Brl'
+        },
+        price_reference_g: {
+            anyOf: [
+                {
+                    type: 'number',
+                    exclusiveMinimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Price Reference G'
+        },
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
         },
         created_at: {
             anyOf: [
@@ -182,13 +874,13 @@ export const FoodEntryPublicSchema = {
         }
     },
     type: 'object',
-    required: ['food_name', 'quantity_g', 'calories', 'protein_g', 'carbs_g', 'fat_g', 'id', 'owner_id'],
-    title: 'FoodEntryPublic'
+    required: ['name', 'id'],
+    title: 'FoodPublic'
 } as const;
 
-export const FoodEntryUpdateSchema = {
+export const FoodUpdateSchema = {
     properties: {
-        food_name: {
+        name: {
             anyOf: [
                 {
                     type: 'string',
@@ -199,21 +891,33 @@ export const FoodEntryUpdateSchema = {
                     type: 'null'
                 }
             ],
-            title: 'Food Name'
+            title: 'Name'
         },
-        quantity_g: {
+        food_group: {
             anyOf: [
                 {
-                    type: 'number',
-                    exclusiveMinimum: 0
+                    type: 'string',
+                    maxLength: 255
                 },
                 {
                     type: 'null'
                 }
             ],
-            title: 'Quantity G'
+            title: 'Food Group'
         },
-        calories: {
+        source: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Source'
+        },
+        energy_kcal: {
             anyOf: [
                 {
                     type: 'number',
@@ -223,7 +927,7 @@ export const FoodEntryUpdateSchema = {
                     type: 'null'
                 }
             ],
-            title: 'Calories'
+            title: 'Energy Kcal'
         },
         protein_g: {
             anyOf: [
@@ -237,7 +941,7 @@ export const FoodEntryUpdateSchema = {
             ],
             title: 'Protein G'
         },
-        carbs_g: {
+        carbohydrate_g: {
             anyOf: [
                 {
                     type: 'number',
@@ -247,9 +951,9 @@ export const FoodEntryUpdateSchema = {
                     type: 'null'
                 }
             ],
-            title: 'Carbs G'
+            title: 'Carbohydrate G'
         },
-        fat_g: {
+        lipid_g: {
             anyOf: [
                 {
                     type: 'number',
@@ -259,23 +963,294 @@ export const FoodEntryUpdateSchema = {
                     type: 'null'
                 }
             ],
-            title: 'Fat G'
+            title: 'Lipid G'
         },
-        entry_datetime: {
+        saturated_fat_g: {
             anyOf: [
                 {
-                    type: 'string',
-                    format: 'date-time'
+                    type: 'number',
+                    minimum: 0
                 },
                 {
                     type: 'null'
                 }
             ],
-            title: 'Entry Datetime'
+            title: 'Saturated Fat G'
+        },
+        monounsaturated_fat_g: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Monounsaturated Fat G'
+        },
+        polyunsaturated_fat_g: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Polyunsaturated Fat G'
+        },
+        cholesterol_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Cholesterol Mg'
+        },
+        fiber_g: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Fiber G'
+        },
+        sodium_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Sodium Mg'
+        },
+        calcium_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Calcium Mg'
+        },
+        magnesium_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Magnesium Mg'
+        },
+        phosphorus_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Phosphorus Mg'
+        },
+        iron_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Iron Mg'
+        },
+        potassium_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Potassium Mg'
+        },
+        copper_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Copper Mg'
+        },
+        zinc_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Zinc Mg'
+        },
+        manganese_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Manganese Mg'
+        },
+        retinol_mcg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Retinol Mcg'
+        },
+        thiamine_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Thiamine Mg'
+        },
+        riboflavin_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Riboflavin Mg'
+        },
+        pyridoxine_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Pyridoxine Mg'
+        },
+        niacin_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Niacin Mg'
+        },
+        vitamin_c_mg: {
+            anyOf: [
+                {
+                    type: 'number',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Vitamin C Mg'
+        },
+        price_brl: {
+            anyOf: [
+                {
+                    type: 'number',
+                    exclusiveMinimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Price Brl'
+        },
+        price_reference_g: {
+            anyOf: [
+                {
+                    type: 'number',
+                    exclusiveMinimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Price Reference G'
         }
     },
     type: 'object',
-    title: 'FoodEntryUpdate'
+    title: 'FoodUpdate'
+} as const;
+
+export const FoodsPublicSchema = {
+    properties: {
+        data: {
+            items: {
+                '$ref': '#/components/schemas/FoodPublic'
+            },
+            type: 'array',
+            title: 'Data'
+        },
+        count: {
+            type: 'integer',
+            title: 'Count'
+        }
+    },
+    type: 'object',
+    required: ['data', 'count'],
+    title: 'FoodsPublic'
 } as const;
 
 export const HTTPValidationErrorSchema = {
@@ -415,6 +1390,187 @@ export const ItemsPublicSchema = {
     type: 'object',
     required: ['data', 'count'],
     title: 'ItemsPublic'
+} as const;
+
+export const MealCreateSchema = {
+    properties: {
+        label: {
+            type: 'string',
+            maxLength: 255,
+            minLength: 1,
+            title: 'Label'
+        },
+        meal_datetime: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Meal Datetime'
+        },
+        is_recipe: {
+            type: 'boolean',
+            title: 'Is Recipe',
+            default: false
+        },
+        food_entries: {
+            items: {
+                '$ref': '#/components/schemas/FoodEntryCreate'
+            },
+            type: 'array',
+            title: 'Food Entries',
+            default: []
+        }
+    },
+    type: 'object',
+    required: ['label'],
+    title: 'MealCreate'
+} as const;
+
+export const MealPublicSchema = {
+    properties: {
+        label: {
+            type: 'string',
+            maxLength: 255,
+            minLength: 1,
+            title: 'Label'
+        },
+        meal_datetime: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Meal Datetime'
+        },
+        is_recipe: {
+            type: 'boolean',
+            title: 'Is Recipe',
+            default: false
+        },
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        owner_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Owner Id'
+        },
+        created_at: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Created At'
+        },
+        food_entries: {
+            items: {
+                '$ref': '#/components/schemas/FoodEntryPublic'
+            },
+            type: 'array',
+            title: 'Food Entries'
+        },
+        total_energy_kcal: {
+            type: 'number',
+            title: 'Total Energy Kcal'
+        },
+        total_protein_g: {
+            type: 'number',
+            title: 'Total Protein G'
+        },
+        total_carbohydrate_g: {
+            type: 'number',
+            title: 'Total Carbohydrate G'
+        },
+        total_lipid_g: {
+            type: 'number',
+            title: 'Total Lipid G'
+        },
+        total_cost_brl: {
+            type: 'number',
+            title: 'Total Cost Brl'
+        }
+    },
+    type: 'object',
+    required: ['label', 'id', 'owner_id', 'food_entries', 'total_energy_kcal', 'total_protein_g', 'total_carbohydrate_g', 'total_lipid_g', 'total_cost_brl'],
+    title: 'MealPublic'
+} as const;
+
+export const MealUpdateSchema = {
+    properties: {
+        label: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255,
+                    minLength: 1
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Label'
+        },
+        meal_datetime: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Meal Datetime'
+        },
+        is_recipe: {
+            anyOf: [
+                {
+                    type: 'boolean'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Is Recipe'
+        },
+        food_entries: {
+            anyOf: [
+                {
+                    items: {
+                        '$ref': '#/components/schemas/FoodEntryCreate'
+                    },
+                    type: 'array'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Food Entries'
+        }
+    },
+    type: 'object',
+    title: 'MealUpdate'
+} as const;
+
+export const MealsPublicSchema = {
+    properties: {
+        data: {
+            items: {
+                '$ref': '#/components/schemas/MealPublic'
+            },
+            type: 'array',
+            title: 'Data'
+        },
+        count: {
+            type: 'integer',
+            title: 'Count'
+        }
+    },
+    type: 'object',
+    required: ['data', 'count'],
+    title: 'MealsPublic'
 } as const;
 
 export const MessageSchema = {

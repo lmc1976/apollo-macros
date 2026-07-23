@@ -1,23 +1,21 @@
 import { EllipsisVertical } from "lucide-react"
 import { useState } from "react"
 
-import type { FoodEntryPublic } from "@/client"
+import type { MealPublic } from "@/client"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import DeleteFoodEntry from "../FoodEntries/DeleteFoodEntry"
-import EditFoodEntry from "../FoodEntries/EditFoodEntry"
+import DeleteMeal from "./DeleteMeal"
+import EditMeal from "./EditMeal"
 
-interface FoodEntryActionsMenuProps {
-  foodEntry: FoodEntryPublic
+interface MealActionsMenuProps {
+  meal: MealPublic
 }
 
-export const FoodEntryActionsMenu = ({
-  foodEntry,
-}: FoodEntryActionsMenuProps) => {
+export const MealActionsMenu = ({ meal }: MealActionsMenuProps) => {
   const [open, setOpen] = useState(false)
 
   return (
@@ -28,8 +26,8 @@ export const FoodEntryActionsMenu = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <EditFoodEntry foodEntry={foodEntry} onSuccess={() => setOpen(false)} />
-        <DeleteFoodEntry id={foodEntry.id} onSuccess={() => setOpen(false)} />
+        <EditMeal meal={meal} onSuccess={() => setOpen(false)} />
+        <DeleteMeal id={meal.id} onSuccess={() => setOpen(false)} />
       </DropdownMenuContent>
     </DropdownMenu>
   )
