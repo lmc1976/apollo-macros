@@ -333,6 +333,13 @@ export type DailyLogsCreateDailyLogData = {
 
 export type DailyLogsCreateDailyLogResponse = (DailyLogPublic);
 
+export type DailyLogsReadDailyLogDatesData = {
+    month: number;
+    year: number;
+};
+
+export type DailyLogsReadDailyLogDatesResponse = (Array<(string)>);
+
 export type DailyLogsReadDailyLogData = {
     id: string;
 };

@@ -47,3 +47,31 @@ export const nowForDateInput = (): string => {
   const tzOffsetMs = now.getTimezoneOffset() * 60000
   return new Date(now.getTime() - tzOffsetMs).toISOString().slice(0, 10)
 }
+
+export const nowForTimeInput = (): string => {
+  const now = new Date()
+  const tzOffsetMs = now.getTimezoneOffset() * 60000
+  return new Date(now.getTime() - tzOffsetMs).toISOString().slice(11, 16)
+}
+
+// All of the following treat a "YYYY-MM-DD" string as a plain calendar date
+// with no timezone, never parsing it with `new Date(string)` (which treats
+// it as UTC midnight and can shift the day when formatted back in a
+// negative-UTC-offset timezone).
+
+export const formatDateInputBR = (value: string): string => {
+  const [year, month, day] = value.split("-")
+  return `${day}/${month}/${year}`
+}
+
+export const dateInputValueToLocalDate = (value: string): Date => {
+  const [year, month, day] = value.split("-").map(Number)
+  return new Date(year, month - 1, day)
+}
+
+export const localDateToDateInputValue = (date: Date): string => {
+  const year = date.getFullYear()
+  const month = `${date.getMonth() + 1}`.padStart(2, "0")
+  const day = `${date.getDate()}`.padStart(2, "0")
+  return `${year}-${month}-${day}`
+}

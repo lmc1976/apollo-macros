@@ -82,6 +82,30 @@ def read_daily_logs(
     )
 
 
+@router.get("/dates", response_model=list[date_type])
+def read_daily_log_dates(
+    session: SessionDep, current_user: CurrentUser, year: int, month: int
+) -> Any:
+    """
+    Retrieve the distinct dates (UTC) within a given year/month that have at
+    least one daily log entry, for calendar day-marking.
+    """
+    month_start = datetime(year, month, 1, tzinfo=timezone.utc)
+    if month == 12:
+        month_end = datetime(year + 1, 1, 1, tzinfo=timezone.utc)
+    else:
+        month_end = datetime(year, month + 1, 1, tzinfo=timezone.utc)
+
+    statement = select(DailyLog.entry_datetime).where(
+        DailyLog.entry_datetime >= month_start, DailyLog.entry_datetime < month_end
+    )
+    if not current_user.is_superuser:
+        statement = statement.where(DailyLog.owner_id == current_user.id)
+
+    entry_datetimes = session.exec(statement).all()
+    return sorted({dt.date() for dt in entry_datetimes})
+
+
 @router.get("/{id}", response_model=DailyLogPublic)
 def read_daily_log(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> Any:
     """

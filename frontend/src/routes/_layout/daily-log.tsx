@@ -5,12 +5,12 @@ import { Suspense, useState } from "react"
 
 import { DailyLogsService } from "@/client"
 import AddDailyLog from "@/components/DailyLog/AddDailyLog"
+import CopyMeal from "@/components/DailyLog/CopyMeal"
 import { DailyLogTable } from "@/components/DailyLog/DailyLogTable"
 import { DailySummary } from "@/components/DailyLog/DailySummary"
+import { DatePickerWithMarkers } from "@/components/DailyLog/DatePickerWithMarkers"
 import PendingDailyLog from "@/components/Pending/PendingDailyLog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { nowForDateInput } from "@/utils"
+import { formatDateInputBR, nowForDateInput } from "@/utils"
 
 function getDailyLogsQueryOptions(date: string) {
   return {
@@ -74,18 +74,15 @@ function DailyLog() {
             Registre o que você comeu, alimento a alimento ou por receita
           </p>
         </div>
-        <AddDailyLog />
+        <div className="flex items-center gap-2">
+          <CopyMeal targetDate={date} />
+          <AddDailyLog selectedDate={date} />
+        </div>
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="daily-log-date">Dia</Label>
-        <Input
-          id="daily-log-date"
-          type="date"
-          className="w-fit"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
+        <h2 className="text-lg font-semibold">Dia {formatDateInputBR(date)}</h2>
+        <DatePickerWithMarkers value={date} onChange={setDate} />
       </div>
 
       <DailyLogSuspense date={date} />

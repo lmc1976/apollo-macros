@@ -240,6 +240,50 @@ def test_read_daily_logs_filtered_by_date(
     assert all(entry["id"] != created["id"] for entry in other_day.json()["data"])
 
 
+def test_read_daily_log_dates(
+    client: TestClient, superuser_token_headers: dict[str, str], db: Session
+) -> None:
+    food = create_random_food(db)
+    client.post(
+        f"{settings.API_V1_STR}/daily-logs/",
+        headers=superuser_token_headers,
+        json={
+            "entry_type": "food",
+            "food_id": str(food.id),
+            "quantity_g": 100,
+            "entry_datetime": "2026-02-10T12:00:00Z",
+        },
+    )
+    client.post(
+        f"{settings.API_V1_STR}/daily-logs/",
+        headers=superuser_token_headers,
+        json={
+            "entry_type": "food",
+            "food_id": str(food.id),
+            "quantity_g": 100,
+            "entry_datetime": "2026-02-20T08:00:00Z",
+        },
+    )
+
+    response = client.get(
+        f"{settings.API_V1_STR}/daily-logs/dates",
+        headers=superuser_token_headers,
+        params={"year": 2026, "month": 2},
+    )
+    assert response.status_code == 200
+    dates = response.json()
+    assert "2026-02-10" in dates
+    assert "2026-02-20" in dates
+
+    other_month = client.get(
+        f"{settings.API_V1_STR}/daily-logs/dates",
+        headers=superuser_token_headers,
+        params={"year": 2026, "month": 3},
+    )
+    assert other_month.status_code == 200
+    assert "2026-02-10" not in other_month.json()
+
+
 def test_update_daily_log_quantity(
     client: TestClient, superuser_token_headers: dict[str, str], db: Session
 ) -> None:

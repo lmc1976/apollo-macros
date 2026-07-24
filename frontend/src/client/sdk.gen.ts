@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { DailyLogsReadDailyLogsData, DailyLogsReadDailyLogsResponse, DailyLogsCreateDailyLogData, DailyLogsCreateDailyLogResponse, DailyLogsReadDailyLogData, DailyLogsReadDailyLogResponse, DailyLogsUpdateDailyLogData, DailyLogsUpdateDailyLogResponse, DailyLogsDeleteDailyLogData, DailyLogsDeleteDailyLogResponse, FoodsReadFoodsData, FoodsReadFoodsResponse, FoodsCreateFoodData, FoodsCreateFoodResponse, FoodsReadFoodData, FoodsReadFoodResponse, FoodsUpdateFoodData, FoodsUpdateFoodResponse, FoodsDeleteFoodData, FoodsDeleteFoodResponse, ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemData, ItemsCreateItemResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemData, ItemsUpdateItemResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, RecipesReadRecipesData, RecipesReadRecipesResponse, RecipesCreateRecipeData, RecipesCreateRecipeResponse, RecipesReadRecipeData, RecipesReadRecipeResponse, RecipesUpdateRecipeData, RecipesUpdateRecipeResponse, RecipesDeleteRecipeData, RecipesDeleteRecipeResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+import type { DailyLogsReadDailyLogsData, DailyLogsReadDailyLogsResponse, DailyLogsCreateDailyLogData, DailyLogsCreateDailyLogResponse, DailyLogsReadDailyLogDatesData, DailyLogsReadDailyLogDatesResponse, DailyLogsReadDailyLogData, DailyLogsReadDailyLogResponse, DailyLogsUpdateDailyLogData, DailyLogsUpdateDailyLogResponse, DailyLogsDeleteDailyLogData, DailyLogsDeleteDailyLogResponse, FoodsReadFoodsData, FoodsReadFoodsResponse, FoodsCreateFoodData, FoodsCreateFoodResponse, FoodsReadFoodData, FoodsReadFoodResponse, FoodsUpdateFoodData, FoodsUpdateFoodResponse, FoodsDeleteFoodData, FoodsDeleteFoodResponse, ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemData, ItemsCreateItemResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemData, ItemsUpdateItemResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, RecipesReadRecipesData, RecipesReadRecipesResponse, RecipesCreateRecipeData, RecipesCreateRecipeResponse, RecipesReadRecipeData, RecipesReadRecipeResponse, RecipesUpdateRecipeData, RecipesUpdateRecipeResponse, RecipesDeleteRecipeData, RecipesDeleteRecipeResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
 
 export class DailyLogsService {
     /**
@@ -46,6 +46,30 @@ export class DailyLogsService {
             url: '/api/v1/daily-logs/',
             body: data.requestBody,
             mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Read Daily Log Dates
+     * Retrieve the distinct dates (UTC) within a given year/month that have at
+     * least one daily log entry, for calendar day-marking.
+     * @param data The data for the request.
+     * @param data.year
+     * @param data.month
+     * @returns string Successful Response
+     * @throws ApiError
+     */
+    public static readDailyLogDates(data: DailyLogsReadDailyLogDatesData): CancelablePromise<DailyLogsReadDailyLogDatesResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/daily-logs/dates',
+            query: {
+                year: data.year,
+                month: data.month
+            },
             errors: {
                 422: 'Validation Error'
             }

@@ -5,6 +5,7 @@ import { logInUser } from "./utils/user"
 
 // Relies on the example foods seeded by the backend (see app/core/db.py).
 const SEEDED_FOOD_NAME = "Banana prata"
+const OTHER_SEEDED_FOOD_NAME = "Feijão carioca cozido"
 
 test("Daily Log page is accessible and shows correct title", async ({
   page,
@@ -33,45 +34,58 @@ test.describe("Daily Log management", () => {
     await page.goto("/daily-log")
   })
 
-  test("Create a food entry successfully", async ({ page }) => {
+  test("Create a meal with multiple items in one batch", async ({ page }) => {
     await page.getByRole("button", { name: "Add Entry" }).click()
+    await page.getByLabel("Rótulo").fill("Almoço")
+
     await page.getByPlaceholder("Buscar alimento...").fill("Banana")
     await page.getByRole("button", { name: SEEDED_FOOD_NAME }).click()
-    await page.getByLabel("Quantidade (g)").fill("120")
-    await page.getByRole("button", { name: "Save" }).click()
+    await page.getByLabel("Quantidade (g)").fill("100")
+    await page.getByRole("button", { name: "Adicionar" }).click()
 
-    await expect(page.getByText("Registro criado com sucesso")).toBeVisible()
-    await expect(page.getByText(SEEDED_FOOD_NAME)).toBeVisible()
+    await expect(page.getByText(`${SEEDED_FOOD_NAME} 100g`)).toBeVisible()
+
+    await page.getByPlaceholder("Buscar alimento...").fill("Feijão")
+    await page.getByRole("button", { name: OTHER_SEEDED_FOOD_NAME }).click()
+    await page.getByLabel("Quantidade (g)").fill("150")
+    await page.getByRole("button", { name: "Adicionar" }).click()
+
+    await expect(page.getByText(`${OTHER_SEEDED_FOOD_NAME} 150g`)).toBeVisible()
+
+    await page.getByRole("button", { name: "Confirmar" }).click()
+
+    await expect(page.getByText("Registros criados com sucesso")).toBeVisible()
+    await expect(page.getByText(/^Almoço - \d{2}:\d{2}$/)).toBeVisible()
+    await expect(page.getByText(/^Total: /)).toBeVisible()
+    await expect(page.getByText("Total do dia")).toBeVisible()
+
+    const foodRow = page.getByRole("row").filter({ hasText: SEEDED_FOOD_NAME })
+    await expect(foodRow).toBeVisible()
+    const beansRow = page
+      .getByRole("row")
+      .filter({ hasText: OTHER_SEEDED_FOOD_NAME })
+    await expect(beansRow).toBeVisible()
   })
 
-  test("Filters entries by selected day and shows the daily summary", async ({
-    page,
-  }) => {
+  test("Cancel entry creation discards drafts", async ({ page }) => {
     await page.getByRole("button", { name: "Add Entry" }).click()
     await page.getByPlaceholder("Buscar alimento...").fill("Banana")
     await page.getByRole("button", { name: SEEDED_FOOD_NAME }).click()
     await page.getByLabel("Quantidade (g)").fill("100")
-    await page.getByRole("button", { name: "Save" }).click()
-    await expect(page.getByText("Registro criado com sucesso")).toBeVisible()
+    await page.getByRole("button", { name: "Adicionar" }).click()
+    await expect(page.getByText(`${SEEDED_FOOD_NAME} 100g`)).toBeVisible()
 
-    await expect(page.getByText("Total do dia")).toBeVisible()
-    await expect(page.getByText(SEEDED_FOOD_NAME)).toBeVisible()
+    await page.getByRole("button", { name: "Cancelar" }).click()
 
-    const yesterday = new Date()
-    yesterday.setDate(yesterday.getDate() - 1)
-    await page
-      .locator("#daily-log-date")
-      .fill(yesterday.toISOString().slice(0, 10))
-
-    await expect(page.getByText("No entries for this day")).toBeVisible()
+    await expect(page.getByRole("dialog")).not.toBeVisible()
     await expect(page.getByText(SEEDED_FOOD_NAME)).not.toBeVisible()
   })
 
-  test("Cancel entry creation", async ({ page }) => {
+  test("Quick-add requires a food selection", async ({ page }) => {
     await page.getByRole("button", { name: "Add Entry" }).click()
-    await page.getByRole("button", { name: "Cancel" }).click()
+    await page.getByRole("button", { name: "Adicionar" }).click()
 
-    await expect(page.getByRole("dialog")).not.toBeVisible()
+    await expect(page.getByText("Selecione um alimento")).toBeVisible()
   })
 
   test("Create a recipe entry and expand its ingredient tree", async ({
@@ -90,19 +104,48 @@ test.describe("Daily Log management", () => {
 
     await page.goto("/daily-log")
     await page.getByRole("button", { name: "Add Entry" }).click()
-    await page.getByLabel("Tipo").click()
+    await page.getByLabel("Alimento ou receita?").click()
     await page.getByRole("option", { name: "Receita" }).click()
     await page.getByPlaceholder("Buscar receita...").fill(recipeName)
     await page.getByRole("button", { name: recipeName }).click()
     await page.getByLabel("Porções").fill("1")
-    await page.getByRole("button", { name: "Save" }).click()
+    await page.getByRole("button", { name: "Adicionar" }).click()
+    await expect(page.getByText(`${recipeName} (1 porção(ões))`)).toBeVisible()
 
-    await expect(page.getByText("Registro criado com sucesso")).toBeVisible()
+    await page.getByRole("button", { name: "Confirmar" }).click()
+    await expect(page.getByText("Registros criados com sucesso")).toBeVisible()
 
     const entryRow = page.getByRole("row").filter({ hasText: recipeName })
     await expect(entryRow).toBeVisible()
     await entryRow.getByRole("button").first().click()
     await expect(page.getByText(SEEDED_FOOD_NAME)).toBeVisible()
+  })
+
+  test("Calendar picker opens", async ({ page }) => {
+    await page.getByRole("button", { name: /\d{2}\/\d{2}\/\d{4}/ }).click()
+    await expect(page.getByRole("grid")).toBeVisible()
+  })
+
+  test("Copy meal duplicates all its entries", async ({ page }) => {
+    const label = "Almoço"
+
+    await page.getByRole("button", { name: "Add Entry" }).click()
+    await page.getByLabel("Rótulo").fill(label)
+    await page.getByPlaceholder("Buscar alimento...").fill("Banana")
+    await page.getByRole("button", { name: SEEDED_FOOD_NAME }).click()
+    await page.getByLabel("Quantidade (g)").fill("100")
+    await page.getByRole("button", { name: "Adicionar" }).click()
+    await page.getByRole("button", { name: "Confirmar" }).click()
+    await expect(page.getByText("Registros criados com sucesso")).toBeVisible()
+
+    await page.getByRole("button", { name: "Copiar refeição" }).click()
+    await page.getByLabel("Qual refeição (rótulo)?").fill(label)
+    await page.getByRole("button", { name: "Copiar", exact: true }).click()
+
+    await expect(page.getByText("Refeição copiada com sucesso")).toBeVisible()
+    await expect(
+      page.getByRole("row").filter({ hasText: SEEDED_FOOD_NAME }),
+    ).toHaveCount(2)
   })
 
   test.describe("Edit and Delete", () => {
@@ -111,8 +154,11 @@ test.describe("Daily Log management", () => {
       await page.getByPlaceholder("Buscar alimento...").fill("Banana")
       await page.getByRole("button", { name: SEEDED_FOOD_NAME }).click()
       await page.getByLabel("Quantidade (g)").fill("120")
-      await page.getByRole("button", { name: "Save" }).click()
-      await expect(page.getByText("Registro criado com sucesso")).toBeVisible()
+      await page.getByRole("button", { name: "Adicionar" }).click()
+      await page.getByRole("button", { name: "Confirmar" }).click()
+      await expect(
+        page.getByText("Registros criados com sucesso"),
+      ).toBeVisible()
       await expect(page.getByRole("dialog")).not.toBeVisible()
     })
 
