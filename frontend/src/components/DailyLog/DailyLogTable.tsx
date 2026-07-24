@@ -32,6 +32,7 @@ function groupByMeal(entries: DailyLogPublic[]): MealGroup[] {
     const time = new Date(entry.entry_datetime).toLocaleTimeString(undefined, {
       hour: "2-digit",
       minute: "2-digit",
+      hour12: false,
     })
     const label = entry.label || "Sem rótulo"
     const key = `${label}__${time}`
