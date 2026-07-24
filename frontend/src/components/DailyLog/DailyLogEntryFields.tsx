@@ -67,7 +67,10 @@ export function DailyLogEntryFields({ form }: DailyLogEntryFieldsProps) {
                   <FoodCombobox
                     value={
                       watch("food_id")
-                        ? { id: watch("food_id"), name: watch("food_name") }
+                        ? {
+                            id: watch("food_id") ?? "",
+                            name: watch("food_name") ?? "",
+                          }
                         : null
                     }
                     onChange={(food) => {
@@ -120,8 +123,8 @@ export function DailyLogEntryFields({ form }: DailyLogEntryFieldsProps) {
                     value={
                       watch("recipe_id")
                         ? {
-                            id: watch("recipe_id"),
-                            name: watch("recipe_name"),
+                            id: watch("recipe_id") ?? "",
+                            name: watch("recipe_name") ?? "",
                           }
                         : null
                     }

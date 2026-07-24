@@ -5,12 +5,17 @@ export const dailyLogFormSchema = z
     entry_type: z.enum(["food", "recipe"]),
     entry_datetime: z.string().min(1, { message: "Data/hora é obrigatória" }),
     label: z.string(),
-    food_id: z.string(),
-    food_name: z.string(),
-    quantity_g: z.number().nullable(),
-    recipe_id: z.string(),
-    recipe_name: z.string(),
-    recipe_servings: z.number().nullable(),
+    // The food_* and recipe_* fields are optional at the schema level
+    // because react-hook-form unregisters whichever branch isn't rendered
+    // (its fields become undefined, not their default "" / null) when the
+    // user toggles entry_type. The superRefine below enforces which ones
+    // are actually required, based on entry_type.
+    food_id: z.string().optional(),
+    food_name: z.string().optional(),
+    quantity_g: z.number().nullable().optional(),
+    recipe_id: z.string().optional(),
+    recipe_name: z.string().optional(),
+    recipe_servings: z.number().nullable().optional(),
   })
   .superRefine((data, ctx) => {
     if (data.entry_type === "food") {
