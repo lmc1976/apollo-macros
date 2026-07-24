@@ -80,6 +80,44 @@ def test_create_daily_log_for_recipe_shows_scaled_ingredients(
     assert ingredient["protein_g"] == 6.5
 
 
+def test_create_daily_log_for_recipe_scales_by_yield_servings(
+    client: TestClient, superuser_token_headers: dict[str, str], db: Session
+) -> None:
+    # A recipe that yields 2 servings in total: logging 1 serving consumed
+    # should scale ingredients by 1/2, not by 1.
+    food = create_random_food(
+        db, name="Cheese", energy_kcal=400, protein_g=25, lipid_g=33
+    )
+    recipe_response = client.post(
+        f"{settings.API_V1_STR}/recipes/",
+        headers=superuser_token_headers,
+        json={
+            "name": "Omelete para dois",
+            "yield_servings": 2,
+            "ingredients": [{"food_id": str(food.id), "quantity_g": 100}],
+        },
+    )
+    assert recipe_response.json()["yield_servings"] == 2
+    recipe_id = recipe_response.json()["id"]
+
+    response = client.post(
+        f"{settings.API_V1_STR}/daily-logs/",
+        headers=superuser_token_headers,
+        json={
+            "entry_type": "recipe",
+            "recipe_id": recipe_id,
+            "recipe_servings": 1,
+        },
+    )
+    assert response.status_code == 200
+    content = response.json()
+    # scale_factor = recipe_servings / yield_servings = 1 / 2 = 0.5
+    assert content["energy_kcal"] == 200  # 400 * 0.5
+    assert content["protein_g"] == 12.5
+    assert content["lipid_g"] == 16.5
+    assert content["ingredients"][0]["quantity_g"] == 50  # 100 * 0.5
+
+
 def test_create_daily_log_rejects_both_food_and_recipe(
     client: TestClient, superuser_token_headers: dict[str, str], db: Session
 ) -> None:
@@ -168,6 +206,38 @@ def test_read_daily_logs(
     )
     assert response.status_code == 200
     assert len(response.json()["data"]) >= 2
+
+
+def test_read_daily_logs_filtered_by_date(
+    client: TestClient, superuser_token_headers: dict[str, str], db: Session
+) -> None:
+    food = create_random_food(db)
+    created = client.post(
+        f"{settings.API_V1_STR}/daily-logs/",
+        headers=superuser_token_headers,
+        json={
+            "entry_type": "food",
+            "food_id": str(food.id),
+            "quantity_g": 100,
+            "entry_datetime": "2026-01-15T12:00:00Z",
+        },
+    ).json()
+
+    same_day = client.get(
+        f"{settings.API_V1_STR}/daily-logs/",
+        headers=superuser_token_headers,
+        params={"date": "2026-01-15"},
+    )
+    assert same_day.status_code == 200
+    assert any(entry["id"] == created["id"] for entry in same_day.json()["data"])
+
+    other_day = client.get(
+        f"{settings.API_V1_STR}/daily-logs/",
+        headers=superuser_token_headers,
+        params={"date": "2026-01-16"},
+    )
+    assert other_day.status_code == 200
+    assert all(entry["id"] != created["id"] for entry in other_day.json()["data"])
 
 
 def test_update_daily_log_quantity(

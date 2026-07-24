@@ -9,7 +9,9 @@ export class DailyLogsService {
     /**
      * Read Daily Logs
      * Retrieve daily log entries, with computed macro and cost totals.
+     * Optionally restrict to a single UTC day via `date`.
      * @param data The data for the request.
+     * @param data.date
      * @param data.skip
      * @param data.limit
      * @returns DailyLogsPublic Successful Response
@@ -20,6 +22,7 @@ export class DailyLogsService {
             method: 'GET',
             url: '/api/v1/daily-logs/',
             query: {
+                date: data.date,
                 skip: data.skip,
                 limit: data.limit
             },

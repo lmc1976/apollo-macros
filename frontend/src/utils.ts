@@ -41,3 +41,9 @@ export const toDatetimeLocalInputValue = (isoString: string): string => {
   const tzOffsetMs = date.getTimezoneOffset() * 60000
   return new Date(date.getTime() - tzOffsetMs).toISOString().slice(0, 16)
 }
+
+export const nowForDateInput = (): string => {
+  const now = new Date()
+  const tzOffsetMs = now.getTimezoneOffset() * 60000
+  return new Date(now.getTime() - tzOffsetMs).toISOString().slice(0, 10)
+}

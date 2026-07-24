@@ -1,17 +1,22 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import { Search } from "lucide-react"
-import { Suspense } from "react"
+import { Suspense, useState } from "react"
 
 import { DailyLogsService } from "@/client"
 import AddDailyLog from "@/components/DailyLog/AddDailyLog"
 import { DailyLogTable } from "@/components/DailyLog/DailyLogTable"
+import { DailySummary } from "@/components/DailyLog/DailySummary"
 import PendingDailyLog from "@/components/Pending/PendingDailyLog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { nowForDateInput } from "@/utils"
 
-function getDailyLogsQueryOptions() {
+function getDailyLogsQueryOptions(date: string) {
   return {
-    queryFn: () => DailyLogsService.readDailyLogs({ skip: 0, limit: 100 }),
-    queryKey: ["daily-logs"],
+    queryFn: () =>
+      DailyLogsService.readDailyLogs({ date, skip: 0, limit: 100 }),
+    queryKey: ["daily-logs", date],
   }
 }
 
@@ -26,8 +31,8 @@ export const Route = createFileRoute("/_layout/daily-log")({
   }),
 })
 
-function DailyLogTableContent() {
-  const { data: dailyLogs } = useSuspenseQuery(getDailyLogsQueryOptions())
+function DailyLogContent({ date }: { date: string }) {
+  const { data: dailyLogs } = useSuspenseQuery(getDailyLogsQueryOptions(date))
 
   if (dailyLogs.data.length === 0) {
     return (
@@ -35,26 +40,31 @@ function DailyLogTableContent() {
         <div className="rounded-full bg-muted p-4 mb-4">
           <Search className="h-8 w-8 text-muted-foreground" />
         </div>
-        <h3 className="text-lg font-semibold">
-          You don't have any daily log entries yet
-        </h3>
+        <h3 className="text-lg font-semibold">No entries for this day</h3>
         <p className="text-muted-foreground">Add a new entry to get started</p>
       </div>
     )
   }
 
-  return <DailyLogTable entries={dailyLogs.data} />
+  return (
+    <div className="flex flex-col gap-4">
+      <DailyLogTable entries={dailyLogs.data} />
+      <DailySummary entries={dailyLogs.data} />
+    </div>
+  )
 }
 
-function DailyLogTableSuspense() {
+function DailyLogSuspense({ date }: { date: string }) {
   return (
     <Suspense fallback={<PendingDailyLog />}>
-      <DailyLogTableContent />
+      <DailyLogContent date={date} />
     </Suspense>
   )
 }
 
 function DailyLog() {
+  const [date, setDate] = useState(nowForDateInput())
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
@@ -66,7 +76,19 @@ function DailyLog() {
         </div>
         <AddDailyLog />
       </div>
-      <DailyLogTableSuspense />
+
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="daily-log-date">Dia</Label>
+        <Input
+          id="daily-log-date"
+          type="date"
+          className="w-fit"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+        />
+      </div>
+
+      <DailyLogSuspense date={date} />
     </div>
   )
 }

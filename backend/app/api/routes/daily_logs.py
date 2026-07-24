@@ -1,4 +1,6 @@
 import uuid
+from datetime import date as date_type
+from datetime import datetime, time, timedelta, timezone
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
@@ -38,36 +40,42 @@ def _ensure_reference_exists(session: SessionDep, daily_log_in: DailyLogCreate) 
 
 @router.get("/", response_model=DailyLogsPublic)
 def read_daily_logs(
-    session: SessionDep, current_user: CurrentUser, skip: int = 0, limit: int = 100
+    session: SessionDep,
+    current_user: CurrentUser,
+    date: date_type | None = None,
+    skip: int = 0,
+    limit: int = 100,
 ) -> Any:
     """
     Retrieve daily log entries, with computed macro and cost totals.
+    Optionally restrict to a single UTC day via `date`.
     """
     if current_user.is_superuser:
         count_statement = select(func.count()).select_from(DailyLog)
-        count = session.exec(count_statement).one()
-        statement = (
-            select(DailyLog)
-            .order_by(DailyLog.entry_datetime.desc())
-            .offset(skip)
-            .limit(limit)
-        )
-        entries = session.exec(statement).all()
+        statement = select(DailyLog)
     else:
         count_statement = (
             select(func.count())
             .select_from(DailyLog)
             .where(DailyLog.owner_id == current_user.id)
         )
-        count = session.exec(count_statement).one()
-        statement = (
-            select(DailyLog)
-            .where(DailyLog.owner_id == current_user.id)
-            .order_by(DailyLog.entry_datetime.desc())
-            .offset(skip)
-            .limit(limit)
+        statement = select(DailyLog).where(DailyLog.owner_id == current_user.id)
+
+    if date is not None:
+        day_start = datetime.combine(date, time.min, tzinfo=timezone.utc)
+        day_end = day_start + timedelta(days=1)
+        count_statement = count_statement.where(
+            DailyLog.entry_datetime >= day_start, DailyLog.entry_datetime < day_end
         )
-        entries = session.exec(statement).all()
+        statement = statement.where(
+            DailyLog.entry_datetime >= day_start, DailyLog.entry_datetime < day_end
+        )
+
+    count = session.exec(count_statement).one()
+    statement = (
+        statement.order_by(DailyLog.entry_datetime.desc()).offset(skip).limit(limit)
+    )
+    entries = session.exec(statement).all()
 
     return DailyLogsPublic(
         data=[daily_log_to_public(entry) for entry in entries], count=count

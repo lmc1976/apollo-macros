@@ -44,6 +44,29 @@ test.describe("Daily Log management", () => {
     await expect(page.getByText(SEEDED_FOOD_NAME)).toBeVisible()
   })
 
+  test("Filters entries by selected day and shows the daily summary", async ({
+    page,
+  }) => {
+    await page.getByRole("button", { name: "Add Entry" }).click()
+    await page.getByPlaceholder("Buscar alimento...").fill("Banana")
+    await page.getByRole("button", { name: SEEDED_FOOD_NAME }).click()
+    await page.getByLabel("Quantidade (g)").fill("100")
+    await page.getByRole("button", { name: "Save" }).click()
+    await expect(page.getByText("Registro criado com sucesso")).toBeVisible()
+
+    await expect(page.getByText("Total do dia")).toBeVisible()
+    await expect(page.getByText(SEEDED_FOOD_NAME)).toBeVisible()
+
+    const yesterday = new Date()
+    yesterday.setDate(yesterday.getDate() - 1)
+    await page
+      .locator("#daily-log-date")
+      .fill(yesterday.toISOString().slice(0, 10))
+
+    await expect(page.getByText("No entries for this day")).toBeVisible()
+    await expect(page.getByText(SEEDED_FOOD_NAME)).not.toBeVisible()
+  })
+
   test("Cancel entry creation", async ({ page }) => {
     await page.getByRole("button", { name: "Add Entry" }).click()
     await page.getByRole("button", { name: "Cancel" }).click()
@@ -137,8 +160,6 @@ test.describe("Daily Log empty state", () => {
 
     await page.goto("/daily-log")
 
-    await expect(
-      page.getByText("You don't have any daily log entries yet"),
-    ).toBeVisible()
+    await expect(page.getByText("No entries for this day")).toBeVisible()
   })
 })

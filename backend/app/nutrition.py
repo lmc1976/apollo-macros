@@ -63,6 +63,7 @@ def recipe_to_public(recipe: Recipe) -> RecipePublic:
         owner_id=recipe.owner_id,
         created_at=recipe.created_at,
         name=recipe.name,
+        yield_servings=recipe.yield_servings,
         ingredients=ingredients,
         total_energy_kcal=totals["energy_kcal"],
         total_protein_g=totals["protein_g"],
@@ -103,17 +104,21 @@ def daily_log_to_public(entry: DailyLog) -> DailyLogPublic:
     assert recipe is not None
     assert entry.recipe_servings is not None
     servings = entry.recipe_servings
+    # servings is expressed in units of "one serving" out of the recipe's
+    # total yield_servings, so the consumed fraction of the whole (as
+    # entered) recipe is servings / yield_servings.
+    scale_factor = servings / recipe.yield_servings
 
     scaled_ingredients = [
         DailyLogIngredientPublic(
             food_id=ingredient.food_id,
             food_name=ingredient.food_name,
-            quantity_g=ingredient.quantity_g * servings,
-            energy_kcal=_scale(ingredient.energy_kcal, servings),
-            protein_g=_scale(ingredient.protein_g, servings),
-            carbohydrate_g=_scale(ingredient.carbohydrate_g, servings),
-            lipid_g=_scale(ingredient.lipid_g, servings),
-            cost_brl=_scale(ingredient.cost_brl, servings),
+            quantity_g=ingredient.quantity_g * scale_factor,
+            energy_kcal=_scale(ingredient.energy_kcal, scale_factor),
+            protein_g=_scale(ingredient.protein_g, scale_factor),
+            carbohydrate_g=_scale(ingredient.carbohydrate_g, scale_factor),
+            lipid_g=_scale(ingredient.lipid_g, scale_factor),
+            cost_brl=_scale(ingredient.cost_brl, scale_factor),
         )
         for ingredient in (recipe_ingredient_to_public(i) for i in recipe.ingredients)
     ]

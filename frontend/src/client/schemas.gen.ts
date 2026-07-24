@@ -1756,6 +1756,12 @@ export const RecipeCreateSchema = {
             minLength: 1,
             title: 'Name'
         },
+        yield_servings: {
+            type: 'number',
+            exclusiveMinimum: 0,
+            title: 'Yield Servings',
+            default: 1
+        },
         ingredients: {
             items: {
                 '$ref': '#/components/schemas/RecipeIngredientCreate'
@@ -1882,6 +1888,12 @@ export const RecipePublicSchema = {
             minLength: 1,
             title: 'Name'
         },
+        yield_servings: {
+            type: 'number',
+            exclusiveMinimum: 0,
+            title: 'Yield Servings',
+            default: 1
+        },
         id: {
             type: 'string',
             format: 'uuid',
@@ -1951,6 +1963,18 @@ export const RecipeUpdateSchema = {
                 }
             ],
             title: 'Name'
+        },
+        yield_servings: {
+            anyOf: [
+                {
+                    type: 'number',
+                    exclusiveMinimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Yield Servings'
         },
         ingredients: {
             anyOf: [

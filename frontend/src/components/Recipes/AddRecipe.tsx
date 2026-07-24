@@ -33,6 +33,7 @@ import { type RecipeFormData, recipeFormSchema } from "./recipeFormSchema"
 
 const emptyDefaultValues = (): RecipeFormData => ({
   name: "",
+  yield_servings: 1,
   ingredients: [{ food_id: "", food_name: "", quantity_g: 0 }],
 })
 
@@ -65,6 +66,7 @@ const AddRecipe = () => {
   const onSubmit = (data: RecipeFormData) => {
     mutation.mutate({
       name: data.name,
+      yield_servings: data.yield_servings,
       ingredients: data.ingredients.map((ingredient) => ({
         food_id: ingredient.food_id,
         quantity_g: ingredient.quantity_g,
@@ -103,6 +105,29 @@ const AddRecipe = () => {
                         placeholder="Ex: Omelete, Vitamina de banana..."
                         type="text"
                         {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="yield_servings"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Rende quantas porções?{" "}
+                      <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Ex: 2"
+                        type="number"
+                        step="any"
+                        {...field}
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
                       />
                     </FormControl>
                     <FormMessage />

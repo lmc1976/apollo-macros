@@ -215,6 +215,7 @@ export type PrivateUserCreate = {
 
 export type RecipeCreate = {
     name: string;
+    yield_servings?: number;
     ingredients?: Array<RecipeIngredientCreate>;
 };
 
@@ -238,6 +239,7 @@ export type RecipeIngredientPublic = {
 
 export type RecipePublic = {
     name: string;
+    yield_servings?: number;
     id: string;
     owner_id: string;
     created_at?: (string | null);
@@ -256,6 +258,7 @@ export type RecipesPublic = {
 
 export type RecipeUpdate = {
     name?: (string | null);
+    yield_servings?: (number | null);
     ingredients?: (Array<RecipeIngredientCreate> | null);
 };
 
@@ -317,6 +320,7 @@ export type ValidationError = {
 };
 
 export type DailyLogsReadDailyLogsData = {
+    date?: (string | null);
     limit?: number;
     skip?: number;
 };

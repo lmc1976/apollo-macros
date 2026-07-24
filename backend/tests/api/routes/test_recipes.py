@@ -31,6 +31,7 @@ def test_create_recipe_with_ingredients(
     assert response.status_code == 200
     content = response.json()
     assert content["name"] == "Arroz com frango"
+    assert content["yield_servings"] == 1  # defaults to a single serving
     assert len(content["ingredients"]) == 1
     ingredient = content["ingredients"][0]
     assert ingredient["food_name"] == "Test Rice"
@@ -138,11 +139,12 @@ def test_update_recipe_fields(
     response = client.put(
         f"{settings.API_V1_STR}/recipes/{recipe.id}",
         headers=superuser_token_headers,
-        json={"name": "Updated name"},
+        json={"name": "Updated name", "yield_servings": 4},
     )
     assert response.status_code == 200
     content = response.json()
     assert content["name"] == "Updated name"
+    assert content["yield_servings"] == 4
     # existing ingredients are preserved when not provided in the update
     assert len(content["ingredients"]) == 1
 

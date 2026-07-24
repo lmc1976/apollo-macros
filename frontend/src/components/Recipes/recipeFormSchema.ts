@@ -10,6 +10,9 @@ export const recipeIngredientFormSchema = z.object({
 
 export const recipeFormSchema = z.object({
   name: z.string().min(1, { message: "Nome da receita é obrigatório" }),
+  yield_servings: z
+    .number({ message: "Rendimento é obrigatório" })
+    .positive({ message: "Rendimento deve ser maior que 0" }),
   ingredients: z
     .array(recipeIngredientFormSchema)
     .min(1, { message: "Adicione pelo menos um alimento" }),

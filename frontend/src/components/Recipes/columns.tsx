@@ -14,6 +14,14 @@ export const columns: ColumnDef<RecipePublic>[] = [
     cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
   },
   {
+    accessorKey: "yield_servings",
+    header: "Rendimento",
+    cell: ({ row }) =>
+      `${formatNumber(row.original.yield_servings ?? 1)} porç${
+        (row.original.yield_servings ?? 1) === 1 ? "ão" : "ões"
+      }`,
+  },
+  {
     id: "ingredients",
     header: "Alimentos",
     cell: ({ row }) => (

@@ -226,9 +226,12 @@ class RecipeIngredientPublic(SQLModel):
 
 # Shared properties
 # A Recipe is a reusable template (no date/time) representing a fixed
-# combination of foods, e.g. "Omelete" = Egg + Salt + Cheese.
+# combination of foods, e.g. "Omelete" = Egg + Salt + Cheese. yield_servings
+# is how many servings the whole recipe (as entered) makes; a DailyLog entry
+# logging this recipe records how many of those servings were consumed.
 class RecipeBase(SQLModel):
     name: str = Field(min_length=1, max_length=255)
+    yield_servings: float = Field(default=1.0, gt=0)
 
 
 # Properties to receive on recipe creation
@@ -240,6 +243,7 @@ class RecipeCreate(RecipeBase):
 # fully replaces the recipe's existing ingredients.
 class RecipeUpdate(RecipeBase):
     name: str | None = Field(default=None, min_length=1, max_length=255)  # type: ignore
+    yield_servings: float | None = Field(default=None, gt=0)  # type: ignore
     ingredients: list[RecipeIngredientCreate] | None = None
 
 

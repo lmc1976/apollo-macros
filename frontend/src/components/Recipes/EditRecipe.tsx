@@ -47,6 +47,7 @@ const EditRecipe = ({ recipe, onSuccess }: EditRecipeProps) => {
     criteriaMode: "all",
     defaultValues: {
       name: recipe.name,
+      yield_servings: recipe.yield_servings ?? 1,
       ingredients: recipe.ingredients.map((ingredient) => ({
         food_id: ingredient.food_id,
         food_name: ingredient.food_name,
@@ -61,6 +62,7 @@ const EditRecipe = ({ recipe, onSuccess }: EditRecipeProps) => {
         id: recipe.id,
         requestBody: {
           name: data.name,
+          yield_servings: data.yield_servings,
           ingredients: data.ingredients.map((ingredient) => ({
             food_id: ingredient.food_id,
             quantity_g: ingredient.quantity_g,
@@ -114,6 +116,29 @@ const EditRecipe = ({ recipe, onSuccess }: EditRecipeProps) => {
                         placeholder="Ex: Omelete, Vitamina de banana..."
                         type="text"
                         {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="yield_servings"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Rende quantas porções?{" "}
+                      <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Ex: 2"
+                        type="number"
+                        step="any"
+                        {...field}
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
                       />
                     </FormControl>
                     <FormMessage />

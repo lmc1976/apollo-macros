@@ -45,6 +45,24 @@ test.describe("Recipes management", () => {
     await expect(page.getByText(name)).toBeVisible()
   })
 
+  test("Create a recipe with a custom yield and see it in the list", async ({
+    page,
+  }) => {
+    const name = randomRecipeName()
+
+    await page.getByRole("button", { name: "Add Recipe" }).click()
+    await page.getByLabel("Nome").fill(name)
+    await page.getByLabel("Rende quantas porções?").fill("2")
+    await page.getByPlaceholder("Buscar alimento...").fill("Banana")
+    await page.getByRole("button", { name: SEEDED_FOOD_NAME }).click()
+    await page.getByPlaceholder("Qtd (g)").fill("120")
+    await page.getByRole("button", { name: "Save" }).click()
+
+    await expect(page.getByText("Receita criada com sucesso")).toBeVisible()
+    const recipeRow = page.getByRole("row").filter({ hasText: name })
+    await expect(recipeRow.getByText("2 porções")).toBeVisible()
+  })
+
   test("Cancel recipe creation", async ({ page }) => {
     await page.getByRole("button", { name: "Add Recipe" }).click()
     await page.getByLabel("Nome").fill("Test Recipe")
