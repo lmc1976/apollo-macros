@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { DailyLogActionsMenu } from "./DailyLogActionsMenu"
+import EditMealSection from "./EditMealSection"
 
 function formatNumber(value: number | null | undefined) {
   return value == null
@@ -67,9 +68,10 @@ function sumMealTotals(entries: DailyLogPublic[]) {
 
 interface DailyLogTableProps {
   entries: DailyLogPublic[]
+  date: string
 }
 
-export function DailyLogTable({ entries }: DailyLogTableProps) {
+export function DailyLogTable({ entries, date }: DailyLogTableProps) {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set())
 
   const toggle = (id: string) => {
@@ -90,12 +92,25 @@ export function DailyLogTable({ entries }: DailyLogTableProps) {
     <div className="flex flex-col gap-6">
       {groups.map((group) => {
         const totals = sumMealTotals(group.entries)
+        const groupEntryIds = new Set(group.entries.map((entry) => entry.id))
+        const otherEntries = entries.filter(
+          (entry) => !groupEntryIds.has(entry.id),
+        )
         return (
           <div key={group.key} className="flex flex-col gap-2">
             <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-              <h3 className="font-semibold">
-                {group.label} - {group.time}
-              </h3>
+              <div className="flex items-center gap-1">
+                <h3 className="font-semibold">
+                  {group.label} - {group.time}
+                </h3>
+                <EditMealSection
+                  date={date}
+                  groupLabel={group.entries[0]?.label}
+                  groupTime={group.time}
+                  entries={group.entries}
+                  otherEntries={otherEntries}
+                />
+              </div>
               <p className="text-muted-foreground text-sm">
                 Total: {formatNumber(totals.energy_kcal)} kcal |{" "}
                 {formatNumber(totals.protein_g)}g proteína |{" "}

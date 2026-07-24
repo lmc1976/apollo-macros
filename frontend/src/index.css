@@ -122,3 +122,24 @@
     cursor: pointer;
   }
 }
+
+/*
+ * Radix's Popper positions floating content (Popover, Select, DropdownMenu...)
+ * inside a wrapper div with position: fixed but z-index: auto. When one of
+ * these is opened from inside a Dialog, that wrapper loses to the Dialog's
+ * z-50 overlay/content (an explicit z-index always beats "auto"), so clicks
+ * on the floating content get swallowed by the dialog overlay underneath it.
+ * Raise it above the Dialog's stacking layer.
+ *
+ * Radix's modal Dialog also sets `pointer-events: none` on <body> while
+ * open, re-enabling it only on its own overlay/content. Since the Popper
+ * wrapper is a separate sibling portal on <body>, it inherits that "none"
+ * and swallows no clicks itself but also can't receive any - re-enable it
+ * explicitly so nested popovers/selects/dropdowns stay interactive.
+ */
+[data-radix-popper-content-wrapper] {
+  /* biome-ignore lint/complexity/noImportantStyles: must beat Radix's own inline z-index/pointer-events */
+  z-index: 60 !important;
+  /* biome-ignore lint/complexity/noImportantStyles: must beat Radix's own inline z-index/pointer-events */
+  pointer-events: auto !important;
+}

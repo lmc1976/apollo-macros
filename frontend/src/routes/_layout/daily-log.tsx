@@ -48,7 +48,7 @@ function DailyLogContent({ date }: { date: string }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <DailyLogTable entries={dailyLogs.data} />
+      <DailyLogTable entries={dailyLogs.data} date={date} />
       <DailySummary entries={dailyLogs.data} />
     </div>
   )
